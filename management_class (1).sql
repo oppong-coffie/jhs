@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 22, 2023 at 06:33 PM
+-- Generation Time: Jul 10, 2023 at 07:36 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -55,8 +55,10 @@ INSERT INTO `admin` (`id`, `images`, `admin_id`, `name`, `email`, `phone`, `birt
 
 CREATE TABLE `parents` (
   `id` int(11) NOT NULL,
+  `name` text NOT NULL,
   `std_id` varchar(250) NOT NULL,
   `email` varchar(50) DEFAULT NULL,
+  `phone` int(11) NOT NULL,
   `password` varchar(10) DEFAULT NULL,
   `role` tinytext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -65,8 +67,11 @@ CREATE TABLE `parents` (
 -- Dumping data for table `parents`
 --
 
-INSERT INTO `parents` (`id`, `std_id`, `email`, `password`, `role`) VALUES
-(1, 'SHJHS1001', 'p1@gmail.com', 'p1', 'parent');
+INSERT INTO `parents` (`id`, `name`, `std_id`, `email`, `phone`, `password`, `role`) VALUES
+(1, 'Oppong', 'SHJHS1001', 'p1@gmail.com', 246414197, 'p1', 'role'),
+(2, 'Coffie', 'SHJHS1002', 'p2@gmail.com', 246414197, 'p2', 'parent'),
+(3, 'Oppong', 'SHJHS1001', 'p1@gmail.com', 246414197, 'p1', 'role'),
+(4, 'Emmanuel', 'SHJHS1003', 'p2@gmail.com', 246414197, 'p3', 'parent');
 
 -- --------------------------------------------------------
 
@@ -90,55 +95,12 @@ CREATE TABLE `scores` (
 --
 
 INSERT INTO `scores` (`id`, `std_id`, `teacher_id`, `subject`, `type`, `mark`, `term`, `class`) VALUES
-(1, NULL, 's2', 'maths', 'exercise', '20', 1, 'jhs1'),
-(3, 's1', 't1', 'maths', 'exercise', '23', 1, 'jhs1'),
-(5, 's3', 't1', 'maths', 'exercise', '15', NULL, ''),
-(6, 's4', 't1', 'maths', 'exercise', '23', NULL, ''),
-(7, 's4', 't1', 'maths', 'exercise', '23', NULL, ''),
-(8, 's4', 't1', 'maths', 'exercise', '23', NULL, ''),
-(9, 's4', 't1', 'maths', 'exercise', '23', NULL, ''),
-(10, 'SHJHS2001', 't1', 'maths', 'exercise', '23', NULL, 'jhs2'),
-(11, 'SHJHS1001', 't1', 'maths', 'exercise', '17', 1, 'jhs1'),
-(12, 'SHJHS1002', 't1', 'maths', 'exercise', '12', 1, 'jhs1'),
-(13, 'SHJHS1003', 't1', 'maths', 'exercise', '15', 1, 'jhs1'),
-(14, 'SHJHS2002', 't1', 'maths', 'exercise', '14', 1, 'jhs2'),
-(15, 'SHJHS2002', 't1', 'maths', 'exercise', '16', 1, 'jhs2'),
-(16, 'SHJHS2003', 't1', 'maths', 'exercise', '11', 1, 'jhs2'),
-(18, 'SHJHS3001', 't1', 'maths', 'exercise', '9', 1, 'jhs3'),
-(19, 'SHJHS3002', 't1', 'maths', 'exercise', '22', 1, 'jhs3'),
-(20, 'SHJHS1001', 't1', 'maths', 'homework', '23', 1, 'jhs1'),
-(21, 'SHJHS1002', 't1', 'maths', 'homework', '11', 1, 'jhs1'),
-(22, 'SHJHS1003', 't1', 'maths', 'homework', '12', 1, 'jhs1'),
-(23, 'SHJHS2001', 't1', 'maths', 'homework', '11', 1, 'jhs2'),
-(24, 'SHJHS2002', 't1', 'maths', 'homework', '23', 1, 'jhs2'),
-(25, 'SHJHS2003', 't1', 'maths', 'homework', '15', 1, 'jhs2'),
-(26, 'SHJHS1001', 't2', 'english', 'exercise', '23', 1, 'jhs1'),
-(27, 'SHJHS1002', 't2', 'english', 'exercise', '11', 1, 'jhs1'),
-(28, 'SHJHS1003', 't2', 'english', 'exercise', '10', 1, 'jhs1'),
-(29, 'SHJHS1001', 't3', 'science', 'exam', '50', 1, 'jhs1'),
-(30, 'SHJHS2002', 't3', 'science', 'exam', '45', 1, 'jhs1'),
-(31, 'SHJHS1003', 't3', 'science', 'exam', '66', 1, 'jhs1'),
-(32, 'SHJHS1001', 't4', 'social studies', 'homework', '11', 1, 'jhs1'),
-(33, 'SHJHS2002', 't4', 'social studies', 'homework', '15', 1, 'jhs1'),
-(34, 'SHJHS1003', 't4', 'social studies', 'homework', '11', 1, 'jhs1'),
-(37, 'SHJHS1001', 't5', 'BDT', 'exercise', '11', 1, 'jhs1'),
-(38, 'SHJHS1002', 't5', 'BDT', 'exercise', '14', 1, 'jhs1'),
-(39, 'SHJHS1003', 't5', 'BDT', 'exercise', '10', 1, 'jhs1'),
-(40, 'SHJHS1001', 't6', 'french', 'exam', '45', 1, 'jhs1'),
-(41, 'SHJHS1002', 't6', 'french', 'exam', '70', 1, 'jhs1'),
-(42, 'SHJHS1003', 't6', 'french', 'exam', '23', 1, 'jhs1'),
-(43, 'SHJHS1001', 't7', 'R M E', 'homework', '10', 1, 'jhs1'),
-(44, 'SHJHS1002', 't7', 'R M E', 'homework', '7', 1, 'jhs1'),
-(45, 'SHJHS1003', 't7', 'R M E', 'homework', '5', 1, 'jhs1'),
-(46, 'SHJHS1001', 't8', 'Creative Art', 'exercise', '11', 1, 'jhs1'),
-(47, 'SHJHS1002', 't8', 'Creative Art', 'exercise', '11', 1, 'jhs1'),
-(48, 'SHJHS1003', 't8', 'Creative Art', 'exercise', '10', 1, 'jhs1'),
-(49, 'SHJHS1001', 't8', 'Creative Art', 'homework', '10', 1, 'jhs1'),
-(50, 'SHJHS1002', 't8', 'Creative Art', 'homework', '7', 1, 'jhs1'),
-(51, 'SHJHS1003', 't8', 'Creative Art', 'homework', '6', 1, 'jhs1'),
-(52, 'SHJHS1001', 't8', 'Creative Art', 'exam', '45', 1, 'jhs1'),
-(53, 'SHJHS1002', 't8', 'Creative Art', 'exam', '23', 1, 'jhs1'),
-(54, 'SHJHS1003', 't8', 'Creative Art', 'exam', '66', 1, 'jhs1');
+(2, 'SHJHS1001', 't1', 'maths', 'homework', '23', 1, 'jhs1'),
+(3, 'SHJHS1002', 't1', 'maths', 'homework', '55', 1, 'jhs1'),
+(4, 'SHJHS1001', 't6', 'french', 'exercise', '17', 1, 'jhs1'),
+(5, 'SHJHS1002', 't6', 'french', 'exercise', '10', 1, 'jhs1'),
+(6, 'SHJHS1001', 't6', 'french', 'exam', '11', 1, 'jhs1'),
+(7, 'SHJHS1003', 't6', 'french', 'exercise', '55', 1, 'jhs1');
 
 -- --------------------------------------------------------
 
@@ -174,6 +136,31 @@ INSERT INTO `students` (`name`, `std_id`, `email`, `class`, `password`, `role`) 
 ('Adwoa Ahenkorah', 'SHJHS3002', 'shjhs3003@gmail.com', 'jhs3', 'shjhs3003', 'student'),
 ('Abigail Ahenkorah', 'SHJHS3003', 'shjhs3004@gmail.com', 'jhs3', 'shjhs3004', 'student'),
 ('Oppong', 'student', 'student@gmail.com', 'jhs1', 'student', 'student');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subjects`
+--
+
+CREATE TABLE `subjects` (
+  `id` int(11) NOT NULL,
+  `subjects` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `subjects`
+--
+
+INSERT INTO `subjects` (`id`, `subjects`) VALUES
+(1, 'Maths'),
+(2, 'English'),
+(3, 'Science'),
+(4, 'Social'),
+(5, 'Creative Art'),
+(6, 'BDT'),
+(7, 'RME'),
+(8, 'French');
 
 -- --------------------------------------------------------
 
@@ -262,6 +249,12 @@ ALTER TABLE `students`
   ADD PRIMARY KEY (`std_id`);
 
 --
+-- Indexes for table `subjects`
+--
+ALTER TABLE `subjects`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `teachers`
 --
 ALTER TABLE `teachers`
@@ -281,13 +274,19 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `parents`
 --
 ALTER TABLE `parents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `scores`
 --
 ALTER TABLE `scores`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `subjects`
+--
+ALTER TABLE `subjects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `teachers`
