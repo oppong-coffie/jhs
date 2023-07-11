@@ -140,7 +140,7 @@ if (isset($_POST["login"])) {
             $studentstatement = mysqli_fetch_array($studentquery);
             if ($studentstatement) {
                 $_SESSION['std_id'] ="admin";
-                header("Location:./admin/admin1.php");
+                header("Location:./admin/dashboard.php");
                 exit();
             } else {
                 echo "Incorrect credentials";
