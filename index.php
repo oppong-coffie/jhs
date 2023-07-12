@@ -44,7 +44,7 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
                     <label class="text-[18px]" for="role">Role</label><br>
                     <select class="h-10 rounded-md outline-none w-80 bg-[#e9e3ff]" name="role">
                         <option value="">-- select role --</option>
-                        <option value="admin">admin</option>
+                        <option value="Admin">Admin</option>
                         <option value="teacher">teacher</option>
                         <option value="student">student</option>
                         <option value="parent">parent</option>
@@ -134,12 +134,11 @@ if (isset($_POST["login"])) {
             echo "Incorrect credentials";
         }
     }
-        else if ($role == "admin") {
+        else if ($role == "Admin") {
             $studentsql = "SELECT * FROM admin WHERE email='$email' AND password='$password'";
             $studentquery = mysqli_query($connection, $studentsql);
-            $studentstatement = mysqli_fetch_array($studentquery);
-            if ($studentstatement) {
-                $_SESSION['std_id'] ="admin";
+            if ($row = mysqli_fetch_array($studentquery)) {
+                $_SESSION['email'] =$row['email'];
                 header("Location:./admin/dashboard.php");
                 exit();
             } else {

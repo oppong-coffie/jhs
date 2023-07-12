@@ -3,26 +3,67 @@ session_start();
 
 // Database connection
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
     $course = $_POST['course'];
-    $date =date('Y-m-d');
-   
-    $query = "INSERT INTO `courses`(`course`, `date`) VALUES ('$course', '$date')";
-    $insert = mysqli_query($connection,$query);
-    if($insert){
-        //alert
+    $teacherId = $_POST['teacherId'];
+    $date = date('Y-m-d');
+
+    // Check if the teacher exists in the teachers table
+    $checkQuery = "SELECT COUNT(*) FROM teachers WHERE id = ?";
+    $checkStatement = mysqli_prepare($connection, $checkQuery);
+    mysqli_stmt_bind_param($checkStatement, "i", $teacherId);
+    mysqli_stmt_execute($checkStatement);
+    mysqli_stmt_store_result($checkStatement);  // Store the result set
+    mysqli_stmt_bind_result($checkStatement, $count);
+    mysqli_stmt_fetch($checkStatement);
+
+    if ($count > 0) {
+        // Check if the course exists in the courses table
+        $checkQuery = "SELECT COUNT(*) FROM courses WHERE id = ?";
+        $checkStatement = mysqli_prepare($connection, $checkQuery);
+        mysqli_stmt_bind_param($checkStatement, "i", $course);
+        mysqli_stmt_execute($checkStatement);
+        mysqli_stmt_store_result($checkStatement);  // Store the result set
+        mysqli_stmt_bind_result($checkStatement, $count);
+        mysqli_stmt_fetch($checkStatement);
+
+        if ($count > 0) {
+            // Both teacher and course exist, proceed with the insert
+            $query = "INSERT INTO teacherCourse (teachers_id, subject_id, date) VALUES (?, ?, ?)";
+            $statement = mysqli_prepare($connection, $query);
+            mysqli_stmt_bind_param($statement, "iis", $teacherId, $course, $date);
+            $insert = mysqli_stmt_execute($statement);
+
+            if ($insert) {
+                // Registration successful
+                echo "<script>
+                        alert('Registration Successful');
+                        window.location.href = 'subjects.php';
+                    </script>";
+            } else {
+                // Unable to register course
+                echo "<script>
+                        alert('Unable to register course');
+                        window.location.href = 'subjects.php';
+                    </script>";
+            }
+        } else {
+            // Invalid course ID
+            echo "<script>
+                    alert('Invalid course ID');
+                    window.location.href = 'subjects.php';
+                </script>";
+        }
+    } else {
+        // Invalid teacher ID
         echo "<script>
-                alert('Registration Successful');
-                window.location.href = 'subjects.php';
-            </script>";
-       
-    }else{
-        echo "<script>
-                alert('Unable to register course ');
+                alert('Invalid teacher ID');
                 window.location.href = 'subjects.php';
             </script>";
     }
 }
+
+
 
 
 //deleting records
@@ -49,11 +90,11 @@ $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($currentpage - 1) * $recordsPerPage;
 
 // Query to retrieve the records for the current page
-$query = "SELECT * FROM `courses` LIMIT $offset, $recordsPerPage";
+$query = "SELECT * FROM `teachercourse` LIMIT $offset, $recordsPerPage";
 $teacher_details = mysqli_query($connection, $query);
 
 // Query to get the total count of records
-$totalRecordsQuery = "SELECT COUNT(*) AS total FROM `courses`";
+$totalRecordsQuery = "SELECT COUNT(*) AS total FROM `teachercourse`";
 $totalRecordsResult = mysqli_query($connection, $totalRecordsQuery);
 $totalRecordsRow = mysqli_fetch_assoc($totalRecordsResult);
 $totalRecords = $totalRecordsRow['total'];
@@ -95,46 +136,49 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 <div>
                     <div class="flex">
                         <p class="text-gray-300 text-sm">Pages</p>
-                        <p class="text-white text-sm">/Manage Subjects</p>
+                        <p class="text-white text-sm">/Manage Classes</p>
                     </div>
                     <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
                 </div>
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
                     <i class="fa-sharp fa-solid fa-sun "></i>
+                    <button  class="bg-white h-6  w-10 rounded-sm shadow-sm text-center">
+                        Add
+                    </button>
+
 
                 </div>
             </div>
 
-            <!-- page title2 -->
-            <div class="text-right">
-                <form action="" method="post">
-                    <input type="text"
-                        class="h-8 rounded-sm text-sm pl-2 w-60 outline-none border focus:border-blue-300 shadow-sm"
-                        placeholder="Enter subject name" name="course">
-                    <input type="submit" value="Add"
-                        class="bg-white h-8  w-12 rounded-sm text-gray-600 shadow-sm text-center   " name="submit">
-
-                </form>
-            </div>
-
             <div class="bg-white  w-[1050px] rounded-lg shadow-sm mt-10 p-6">
                 <table id="myTable" class="w-[990px] ml-2" id="container">
-                    <thead class="p-2 ">
+                    <thead class="p-2">
                         <tr class="text-left text-[12px] h-10 text-gray-400">
                             <th>ID</th>
-                            <th >Subject NAME</th>
+                            <th>TEACHER ID</th>
+                            <th>SUBJECT</th>
                             <th>DATE</th>
                             <th>ACTION</th>
                         </tr>
                     </thead>
                     <?php
-                    while ($row = mysqli_fetch_array($teacher_details)) {
-                    ?>
+    while ($row = mysqli_fetch_array($teacher_details)) {
+        ?>
                     <tbody class="text-[13px] text-gray-600">
                         <tr class="even:bg-[#e9e3ff] h-10">
                             <td><?php echo $row["id"] ?></td>
-                            <td ><?php echo $row["course"] ?></td>
+                            <td><?php echo $row["teachers_id"] ?></td>
+                            <td>
+                                <?php
+                    // Fetch course name based on subject_id
+                    $subjectId = $row["subject_id"];
+                    $query = "SELECT course FROM courses WHERE id = $subjectId";
+                    $result = mysqli_query($connection, $query);
+                    $courseName = mysqli_fetch_array($result)['course'];
+                    echo $courseName;
+                    ?>
+                            </td>
                             <td><?php echo $row["date"] ?></td>
                             <td>
                                 <div class="flex gap-[2px]">
@@ -154,9 +198,10 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                         </tr>
                     </tbody>
                     <?php
-                    }
-                    ?>
+    }
+    ?>
                 </table>
+
                 <!-- pagination -->
                 <!-- pagination -->
                 <div class="pagination mt-10 gap-10">

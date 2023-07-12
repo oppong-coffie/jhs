@@ -21,45 +21,57 @@ if (isset($_POST['logout'])) {
     header("Location:index.php");
 }
 
-//adding new admin to the system
-//adding new admin to the system
-if (isset($_POST["register"])) {
+if (isset($_POST["update"])) {
     // Retrieving data from the form and sanitizing input
-    // Retrieving data from the form and sanitizing input
-    $password = mysqli_real_escape_string($connection, $_POST["password"]);
-    $role = mysqli_real_escape_string($connection, $_POST["role"]);
     $name = mysqli_real_escape_string($connection, $_POST["name"]);
     $email = mysqli_real_escape_string($connection, $_POST["email"]);
     $phone = $_POST["phone"];
     $dob = mysqli_real_escape_string($connection, $_POST["dob"]);
     $gender = mysqli_real_escape_string($connection, $_POST["gender"]);
-    $image = $_FILES["image"]["name"];
-    $img_temp_name = $_FILES['image']['tmp_name'];
-    $img_path = "../images/" . $image;
-    $date = date("Y-m-d");
 
-    // Now let's move the uploaded image into the folder: image
-    if (move_uploaded_file($img_temp_name, $img_path)) {
-        // Inserting data into the database
-        $insert_query = mysqli_query($connection, "INSERT INTO `teachers` ( `name`, `image`, `email`, `birthDate`, `phoneNo`, `gender`, `role`,`password`,`date`) VALUES ( '$name', '$image', '$email', '$dob', '$phone', '$gender', '$role','$password','$date')");
+    // Check if an image file was uploaded
+    if ($_FILES["image"]["name"]) {
+        $image = $_FILES["image"]["name"];
+        $img_temp_name = $_FILES['image']['tmp_name'];
+        $img_path = "../images/" . $image;
 
+        // Move the uploaded image to the folder: images
+        if (move_uploaded_file($img_temp_name, $img_path)) {
+            // Update data in the database, including the image field
+            $update_query = mysqli_query($connection, "UPDATE `admin` SET `name` = '$name', `images` = '$image', `email` = '$email', `birthDate` = '$dob', `phoneNo` = '$phone', `gender` = '$gender' WHERE `email` = '{$_SESSION['email']}'");
 
-        if ($insert_query) {
-            echo "<script>
-                alert('Registration Successful');
-                window.location.href = './teacher_reg.php';
-            </script>";
+            if ($update_query) {
+                echo "<script>
+                    alert('Admin record updated successfully');
+                    window.location.href = './dashboard.php';
+                </script>";
+            } else {
+                echo "<script>
+                    alert('Failed to update admin record');
+                </script>";
+            }
         } else {
             echo "<script>
-                alert('Registration Failed');
+                alert('Failed to upload image');
             </script>";
         }
     } else {
-        echo "<script>
-            alert('Failed to upload image');
-        </script>";
+        // Update data in the database, excluding the image field
+        $update_query = mysqli_query($connection, "UPDATE `admin` SET `name` = '$name', `email` = '$email', `birthDate` = '$dob', `phoneNo` = '$phone', `gender` = '$gender' WHERE  `email` = '{$_SESSION['email']}'");
+
+        if ($update_query) {
+            echo "<script>
+                alert('Admin record updated successfully');
+                window.location.href = './dashboard.php';
+            </script>";
+        } else {
+            echo "<script>
+                alert('Failed to update admin record');
+            </script>";
+        }
     }
 }
+
 
 
 
@@ -107,7 +119,7 @@ if (isset($_POST["register"])) {
                 <div>
                     <div class="flex">
                         <p class="text-gray-300 text-sm">Pages</p>
-                        <p class="text-white text-sm">/Add Teacher</p>
+                        <p class="text-white text-sm">/Edit Profile</p>
                     </div>
                     <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
                 </div>
@@ -129,18 +141,20 @@ if (isset($_POST["register"])) {
                     <div class="w-1/3 flex items-center">
                         <div class="h-4 w-4 rounded-full bg-gray-300"></div>
                         <div class="flex-1 h-0.5 bg-gray-300"></div>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="w-1/3 flex items-center">
                         <div class="h-4 w-4 rounded-full bg-gray-300"></div>
-                        <div class="flex-1 h-0.5 bg-gray-300"></div>
                     </div>
                 </div>
             </div>
 
             <div class="flex items-center mb-8 flex justify-center mt-10">
                 <div class="h-[360px] w-[600px] bg-white rounded-lg p-6">
+                    <!-- fecting data -->
+                    <!-- fecting data -->
+                    <?php
+                    $id = $_SESSION['email'];
+                    $query = mysqli_query($connection, "SELECT * FROM `admin` WHERE `email` = '$id'");
+                    $row = mysqli_fetch_array($query);
+                    ?>
                     <form id="multiStepForm" method="post" action="" enctype="multipart/form-data">
                         <!-- first form -->
                         <!-- first form -->
@@ -148,23 +162,19 @@ if (isset($_POST["register"])) {
                             <div>
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">
                                     Name</label>
-                                <input type="text" id="firstName" name="name"
+                                <input type="text" id="firstName" value="<?php echo $row["name"] ?>" name="name"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter your name..."><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Email</label>
-                                <input type="text" id="firstName" name="email"
+                                <input type="text" value="<?php echo $row["email"] ?>" id="firstName" name="email"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter email..."><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Gender</label>
-                                <select type="text" id="firstName" name="gender"
+                                <input type="text" id="firstName" value="<?php echo $row["gender"] ?>" name="gender"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select gender --</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select><br><br>
+                                    placeholder="Enter your first name"><br><br>
                             </div>
 
                             <button type="button"
@@ -179,55 +189,29 @@ if (isset($_POST["register"])) {
                         <div class="mb-6 hidden step" id="step2">
                             <div>
                                 <label class=" text-gray-700  mb-2 text-sm" for="phone">Phone</label>
-                                <input type="text" id="firstName" name="phone"
+                                <input type="text" value="<?php echo $row["phoneNo"] ?>" id="firstName" name="phone"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter phone..."><br><br>
 
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Password</label>
-                                <input type="text" id="firstName" name="password"
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Image</label>
+                                <input type="file" value="<?php echo $row["images"] ?>" id="firstName" name="image"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter password..."><br><br>
+                                    placeholder="Enter your first name"><br><br>
 
-                                    <label class=" text-gray-700  mb-2 text-sm" for="firstName">Role</label>
-                                <select type="text" id="firstName" name="role"
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Date of Birth</label>
+                                <input type="date" value="<?php echo $row["birthDate"] ?>" id="firstName" name="dob"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select role --</option>
-                                    <option value="Admin">Admin</option>
-                                </select><br><br>
+                                    placeholder="Enter your first name"><br><br>
 
                             </div>
                             <div>
                                 <button type="button"
                                     class="mt-4 mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 previousButton"
                                     data-previous-step="step1">Previous</button>
-                                <button type="button"
-                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 nextButton"
-                                    data-next-step="step3">Next</button>
-                            </div>
-                        </div>
-
-                        <!-- third form -->
-                        <!-- third form -->
-                        <div class="mb-6 hidden step" id="step3">
-                            <div>
-
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Image</label>
-                                <input type="file" id="firstName" name="image"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name"><br><br>
-
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Date of Birth</label>
-                                <input type="date" id="firstName" name="dob"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name"><br><br>
-                            </div>
-                            <div>
-                                <button type="button"
-                                    class="mt-4 mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 previousButton"
-                                    data-previous-step="step2">Previous</button>
                                 <button type="submit"
-                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600" name="register">Submit</button>
+                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                                    name="update">Update</button>
+
                             </div>
                         </div>
                     </form>

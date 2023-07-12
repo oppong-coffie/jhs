@@ -135,7 +135,7 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
                         <p class="text-[30px] mt-4">
                             <?php
                             // Fetch the total number of subjects from the database
-                            $totalsubjects_sql = "SELECT COUNT(*) AS total_subjects FROM subjects";
+                            $totalsubjects_sql = "SELECT COUNT(*) AS total_subjects FROM courses";
                             $totalsubjects_query = mysqli_query($connection, $totalsubjects_sql);
 
                             // Check if the query was successful
@@ -203,7 +203,7 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
                         ?>
                         </p>
-                        <a href="">
+                        <a href="./teachers_reg.php">
                             <button
                                 class="mt-4 h-6 w-20 rounded-sm text-gray-100 bg-green-500 text-sm">detailed</button>
                         </a>
@@ -247,7 +247,7 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
                         ?>
                         </p>
                         <!-- view more button -->
-                        <a href="">
+                        <a href="./teachers_reg.php">
                             <button class="mt-4 h-6 w-20 text-sm rounded-sm text-gray-100 bg-blue-400">detailed</button>
                         </a>
                     </div>
@@ -278,7 +278,7 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
                         <p class="text-gray-600 text-md">Profile</p>
 
                         <div class="ml-auto h-[40px] w-[40px] bg-gray-400 rounded-full flex items-center justify-center">
-                            <a href="">
+                            <a href="edit_profile.php">
                                 <p class="text-gray-200 text-md"><i class="fa fa-user-pen"></i></p>
                             </a>
                         </div>
@@ -287,12 +287,71 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
                     <div class="flex mt-4 justify-center">
                         <div>
                             <div class="mt-4 h-[100px] w-[100px] rounded-lg">
-                                <img src="../images/gyan.jpg" alt="" class="h-[100px] w-[100px] rounded-lg">
+                            <?php
+                                // Select query
+                                $select_query = mysqli_query($connection, "SELECT images FROM admin WHERE email = '{$_SESSION['email']}'");
+
+                                // Check if the select query was successful
+                                if ($select_query) {
+                                    // Fetch the result as an associative array
+                                    $admin_image = mysqli_fetch_assoc($select_query);
+
+                                    // Access the image column
+                                    $admin_image = $admin_image['images'];
+
+                                    // Output the image
+                                    echo "<img src='../images/$admin_image' alt='admin image' class=' h-[100px] w-[100px] rounded-lg'>";
+                                } else {
+                                    // Query execution failed
+                                    echo "Error: " . mysqli_error($connection);
+                                }
+                            ?>
+
                             </div>
 
                             <div class="">
-                                <p class="text-gray-600 text-md mt-2">John Doe</p>
-                                <p class="text-gray-600 text-md mt-2">Admin</p>
+                                <p class="text-gray-600 text-md mt-2">
+                                <?php
+                                // Select query
+                                $select_query = mysqli_query($connection, "SELECT name FROM admin WHERE email = '{$_SESSION['email']}'");
+
+                                // Check if the select query was successful
+                                if ($select_query) {
+                                    // Fetch the result as an associative array
+                                    $name = mysqli_fetch_assoc($select_query);
+
+                                    // Access the image column
+                                    $name = $name['name'];
+
+                                    // Output the image
+                                    echo $name;
+                                } else {
+                                    // Query execution failed
+                                    echo "Error: " . mysqli_error($connection);
+                                }
+                            ?>
+                                </p>
+                                <p class="text-gray-600 text-md mt-2">
+                                <?php
+                                // Select query
+                                $select_query = mysqli_query($connection, "SELECT role FROM admin WHERE email = '{$_SESSION['email']}'");
+
+                                // Check if the select query was successful
+                                if ($select_query) {
+                                    // Fetch the result as an associative array
+                                    $role = mysqli_fetch_assoc($select_query);
+
+                                    // Access the image column
+                                    $role = $role['role'];
+
+                                    // Output the image
+                                    echo $role;
+                                } else {
+                                    // Query execution failed
+                                    echo "Error: " . mysqli_error($connection);
+                                }
+                            ?>
+                                </p>
                             </div>
                         </div>
                     </div>

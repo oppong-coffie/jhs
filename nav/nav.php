@@ -15,19 +15,31 @@
             <div class="mt-8">
                 <li class="list-none active">
                     <i class="fa-regular fa-house text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
-                        href="admin.php">Dashboard</a>
+                        href="dashboard.php">Dashboard</a>
+                </li>
+                <li class="list-none mt-4">
+                    <i class="fa-solid fa-user-lock text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
+                        href="admin_reg.php">Admins</a>
                 </li>
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-briefcase text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
-                        href="">Subjects</a>
+                        href="teacher_reg.php">Teachers</a>
                 </li>
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-briefcase text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
-                        href="teachers_reg.php">Teachers</a>
+                        href="subjects.php">Subjects</a>
+                </li>
+                <li class="list-none mt-4">
+                    <i class="fa-regular fa-briefcase text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
+                        href="teacher_course_assigment.php">Teacher Courses</a>
                 </li>
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-users text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
                         href="students_reg.php">Students</a>
+                </li>
+                <li class="list-none mt-4">
+                    <i class="fa-regular fa-users text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
+                        href="class_reg.php">Classes</a>
                 </li>
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-user text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
@@ -48,8 +60,8 @@
             </div>
 
             <form action="" method="post" onsubmit="return confirmLogout()">
-                <div class="mt-[210px]">
-                    <input class="h-10 rounded-md bg-[#736FE1]  text-white flex justify-center w-40 flex text-md"
+                <div class="mt-[140px]">
+                    <input class="h-10 rounded-md  bg-[#736FE1]  text-white flex justify-center w-40 flex text-md"
                         type="submit" value="LOGOUT" name="logout">
                 </div>
                  

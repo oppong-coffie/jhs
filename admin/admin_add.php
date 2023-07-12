@@ -26,6 +26,7 @@ if (isset($_POST['logout'])) {
 if (isset($_POST["register"])) {
     // Retrieving data from the form and sanitizing input
     // Retrieving data from the form and sanitizing input
+    $id = mysqli_real_escape_string($connection, $_POST["id"]);
     $password = mysqli_real_escape_string($connection, $_POST["password"]);
     $role = mysqli_real_escape_string($connection, $_POST["role"]);
     $name = mysqli_real_escape_string($connection, $_POST["name"]);
@@ -41,13 +42,13 @@ if (isset($_POST["register"])) {
     // Now let's move the uploaded image into the folder: image
     if (move_uploaded_file($img_temp_name, $img_path)) {
         // Inserting data into the database
-        $insert_query = mysqli_query($connection, "INSERT INTO `teachers` ( `name`, `image`, `email`, `birthDate`, `phoneNo`, `gender`, `role`,`password`,`date`) VALUES ( '$name', '$image', '$email', '$dob', '$phone', '$gender', '$role','$password','$date')");
+        $insert_query = mysqli_query($connection, "INSERT INTO `admin` (`adminId`, `name`, `images`, `email`, `birthDate`, `phoneNo`, `gender`, `role`,`password`,`date`) VALUES ('$id', '$name', '$image', '$email', '$dob', '$phone', '$gender', '$role','$password','$date')");
 
 
         if ($insert_query) {
             echo "<script>
                 alert('Registration Successful');
-                window.location.href = './teacher_reg.php';
+                window.location.href = './admin_reg.php';
             </script>";
         } else {
             echo "<script>
@@ -107,7 +108,7 @@ if (isset($_POST["register"])) {
                 <div>
                     <div class="flex">
                         <p class="text-gray-300 text-sm">Pages</p>
-                        <p class="text-white text-sm">/Add Teacher</p>
+                        <p class="text-white text-sm">/Add Admin</p>
                     </div>
                     <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
                 </div>
@@ -188,14 +189,10 @@ if (isset($_POST["register"])) {
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter password..."><br><br>
 
-                                    <label class=" text-gray-700  mb-2 text-sm" for="firstName">Role</label>
-                                <select type="text" id="firstName" name="role"
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Admin Id</label>
+                                <input type="text" id="firstName" name="id"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select role --</option>
-                                    <option value="Admin">Admin</option>
-                                </select><br><br>
-
+                                    placeholder="Enter admin id..."><br><br>
                             </div>
                             <div>
                                 <button type="button"
@@ -211,6 +208,13 @@ if (isset($_POST["register"])) {
                         <!-- third form -->
                         <div class="mb-6 hidden step" id="step3">
                             <div>
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Role</label>
+                                <select type="text" id="firstName" name="role"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                    placeholder="Enter your first name">
+                                    <option value="">-- select role --</option>
+                                    <option value="Admin">Admin</option>
+                                </select><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Image</label>
                                 <input type="file" id="firstName" name="image"
