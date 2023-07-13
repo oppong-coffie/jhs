@@ -23,11 +23,15 @@
                 </li>
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-briefcase text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
-                        href="teacher_reg.php">Teachers</a>
+                        href="subjects.php">Subjects</a>
+                </li>
+                <li class="list-none mt-4">
+                    <i class="fa-regular fa-users text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
+                        href="class_reg.php">Classes</a>
                 </li>
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-briefcase text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
-                        href="subjects.php">Subjects</a>
+                        href="teacher_reg.php">Teachers</a>
                 </li>
                 
                 <li class="list-none mt-4">
@@ -44,8 +48,9 @@
                 </li>
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-users text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
-                        href="class_reg.php">Classes</a>
+                        href="student_class_reg.php">Student Classes</a>
                 </li>
+                
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-user text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
                         href="parents_reg.php">Parents</a>
