@@ -9,59 +9,50 @@ if (isset($_POST['submit'])) {
     $date = date('Y-m-d');
 
     // Check if the teacher exists in the teachers table
-    $checkQuery = "SELECT COUNT(*) FROM teachers WHERE id = ?";
-    $checkStatement = mysqli_prepare($connection, $checkQuery);
-    mysqli_stmt_bind_param($checkStatement, "i", $teacherId);
-    mysqli_stmt_execute($checkStatement);
-    mysqli_stmt_store_result($checkStatement);  // Store the result set
-    mysqli_stmt_bind_result($checkStatement, $count);
-    mysqli_stmt_fetch($checkStatement);
+    $checkQuery = "SELECT COUNT(*) FROM teachers WHERE id = $teacherId";
+    $checkResult = mysqli_query($connection, $checkQuery);
+    $teacherCount = mysqli_fetch_array($checkResult)[0];
 
-    if ($count > 0) {
+    if ($teacherCount > 0) {
         // Check if the course exists in the courses table
-        $checkQuery = "SELECT COUNT(*) FROM courses WHERE id = ?";
-        $checkStatement = mysqli_prepare($connection, $checkQuery);
-        mysqli_stmt_bind_param($checkStatement, "i", $course);
-        mysqli_stmt_execute($checkStatement);
-        mysqli_stmt_store_result($checkStatement);  // Store the result set
-        mysqli_stmt_bind_result($checkStatement, $count);
-        mysqli_stmt_fetch($checkStatement);
+        $checkQuery = "SELECT COUNT(*) FROM courses WHERE id = $course";
+        $checkResult = mysqli_query($connection, $checkQuery);
+        $courseCount = mysqli_fetch_array($checkResult)[0];
 
-        if ($count > 0) {
+        if ($courseCount > 0) {
             // Both teacher and course exist, proceed with the insert
-            $query = "INSERT INTO teacherCourse (teachers_id, subject_id, date) VALUES (?, ?, ?)";
-            $statement = mysqli_prepare($connection, $query);
-            mysqli_stmt_bind_param($statement, "iis", $teacherId, $course, $date);
-            $insert = mysqli_stmt_execute($statement);
+            $query = "INSERT INTO teacherCourse (teachers_id, subject_id, date) VALUES ($teacherId, $course, '$date')";
+            $insert = mysqli_query($connection, $query);
 
             if ($insert) {
                 // Registration successful
                 echo "<script>
                         alert('Registration Successful');
-                        window.location.href = 'subjects.php';
+                        window.location.href = 'teacher_course_assigment.php';
                     </script>";
             } else {
                 // Unable to register course
                 echo "<script>
                         alert('Unable to register course');
-                        window.location.href = 'subjects.php';
+                        window.location.href = 'teacher_course_assigment.php';
                     </script>";
             }
         } else {
             // Invalid course ID
             echo "<script>
                     alert('Invalid course ID');
-                    window.location.href = 'subjects.php';
+                    window.location.href = 'teacher_course_assigment.php';
                 </script>";
         }
     } else {
         // Invalid teacher ID
         echo "<script>
                 alert('Invalid teacher ID');
-                window.location.href = 'subjects.php';
+                window.location.href = 'teacher_course_assigment.php';
             </script>";
     }
 }
+
 
 
 
@@ -160,7 +151,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                             $select = mysqli_query($connection, $query);
                             while ($row = mysqli_fetch_array($select)) {
                         ?>
-                            <option value="<?php echo $row['id']; ?>"><?php echo $row['course']; ?></option>
+                        <option value="<?php echo $row['id']; ?>"><?php echo $row['course']; ?></option>
                         <?php
                             }
                         ?>
@@ -173,25 +164,25 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
             </div>
 
             <div class="bg-white  w-[1050px] rounded-lg shadow-sm mt-10 p-6">
-            <table id="myTable" class="w-[990px] ml-2" id="container">
-    <thead class="p-2">
-        <tr class="text-left text-[12px] h-10 text-gray-400">
-            <th>ID</th>
-            <th>TEACHER ID</th>
-            <th>SUBJECT</th>
-            <th>DATE</th>
-            <th>ACTION</th>
-        </tr>
-    </thead>
-    <?php
-    while ($row = mysqli_fetch_array($teacher_details)) {
-        ?>
-        <tbody class="text-[13px] text-gray-600">
-            <tr class="even:bg-[#e9e3ff] h-10">
-                <td><?php echo $row["id"] ?></td>
-                <td><?php echo $row["teachers_id"] ?></td>
-                <td>
+                <table id="myTable" class="w-[990px] ml-2" id="container">
+                    <thead class="p-2">
+                        <tr class="text-left text-[12px] h-10 text-gray-400">
+                            <th>ID</th>
+                            <th>TEACHER ID</th>
+                            <th>SUBJECT</th>
+                            <th>DATE</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
                     <?php
+                        while ($row = mysqli_fetch_array($teacher_details)) {
+                    ?>
+                    <tbody class="text-[13px] text-gray-600">
+                        <tr class="even:bg-[#e9e3ff] h-10">
+                            <td><?php echo $row["id"] ?></td>
+                            <td><?php echo $row["teachers_id"] ?></td>
+                            <td>
+                                <?php
                     // Fetch course name based on subject_id
                     $subjectId = $row["subject_id"];
                     $query = "SELECT course FROM courses WHERE id = $subjectId";
@@ -199,28 +190,29 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                     $courseName = mysqli_fetch_array($result)['course'];
                     echo $courseName;
                     ?>
-                </td>
-                <td><?php echo $row["date"] ?></td>
-                <td>
-                    <div class="flex gap-[2px]">
-                        <a href="teacher_reg.php?id=<?php echo $row['id'] ?>">
-                            <div class="bg-green-500 text-white w-6 text-center rounded-sm">
-                                <button><i class="fa fa-edit"></i></button>
-                            </div>
-                        </a>
-                        <a href="teachers_reg.php?delete=<?php echo $row['id'] ?>">
-                            <div class="bg-red-600 text-white w-6 text-center rounded-sm">
-                                <button onclick="return confirmDelete()"><i class="fa fa-trash"></i></button>
-                            </div>
-                        </a>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    <?php
+                            </td>
+                            <td><?php echo $row["date"] ?></td>
+                            <td>
+                                <div class="flex gap-[2px]">
+                                    <a href="teacher_reg.php?id=<?php echo $row['id'] ?>">
+                                        <div class="bg-green-500 text-white w-6 text-center rounded-sm">
+                                            <button><i class="fa fa-edit"></i></button>
+                                        </div>
+                                    </a>
+                                    <a href="teachers_reg.php?delete=<?php echo $row['id'] ?>">
+                                        <div class="bg-red-600 text-white w-6 text-center rounded-sm">
+                                            <button onclick="return confirmDelete()"><i
+                                                    class="fa fa-trash"></i></button>
+                                        </div>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <?php
     }
     ?>
-</table>
+                </table>
 
                 <!-- pagination -->
                 <!-- pagination -->

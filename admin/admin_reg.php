@@ -20,7 +20,7 @@ if (isset($_GET['delete'])) {
 
 
 // Number of records per page
-$recordsPerPage = 10;
+$recordsPerPage = 8;
 
 // Get the current page number from the URL parameter
 $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -108,7 +108,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                         $admin_image = $row['images'];
                     ?>
                     <tbody class="text-[13px] text-gray-600">
-                        <tr class="even:bg-[#e9e3ff] h-10">
+                        <tr class=" h-14">
                             <td><?php echo $row["Id"] ?></td>
                             <td>
                                 <?php
@@ -145,7 +145,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 </table>
                 <!-- pagination -->
                 <!-- pagination -->
-                <div class="pagination mt-10 gap-10">
+                <div class="pagination mt-4 gap-10">
                     <?php if ($totalPages > 1) { ?>
                     <?php if ($currentpage > 1) { ?>
                     <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>

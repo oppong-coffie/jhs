@@ -29,13 +29,18 @@
                     <i class="fa-regular fa-briefcase text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
                         href="subjects.php">Subjects</a>
                 </li>
+                
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-briefcase text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
-                        href="teacher_course_assigment.php">Teacher Courses</a>
+                        href="teacher_class_assigment.php">Teacher Classes</a>
                 </li>
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-users text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
                         href="students_reg.php">Students</a>
+                </li>
+                <li class="list-none mt-4">
+                    <i class="fa-regular fa-users text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
+                        href="student_subject_registeration.php">Student Subjects</a>
                 </li>
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-users text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
@@ -60,7 +65,7 @@
             </div>
 
             <form action="" method="post" onsubmit="return confirmLogout()">
-                <div class="mt-[140px]">
+                <div class="">
                     <input class="h-10 rounded-md  bg-[#736FE1]  text-white flex justify-center w-40 flex text-md"
                         type="submit" value="LOGOUT" name="logout">
                 </div>

@@ -1,250 +1,175 @@
 <?php
 session_start();
 
-//database connection
+// Database connection
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
-//deleting a row
-if (isset($_GET["delete"])) {
-    $delete = $_GET["delete"];
-    //delete query
-    $delete_query = mysqli_query($connection, "DELETE FROM teachers WHERE id ='$delete'");
+
+//deleting records
+if (isset($_GET['delete'])) {
+    $id = $_GET['delete'];
+    $query = "DELETE FROM `admin` WHERE `id` = $id";
+    $delete = mysqli_query($connection,"DELETE FROM `admin` WHERE `id` = $id" );
+
+    if ($delete) {
+        header('location:admin_reg.php');
+    }
 }
+
+
+
+
+// Number of records per page
+$recordsPerPage = 8;
+
+// Get the current page number from the URL parameter
+$currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
+
+// Calculate the offset for the query
+$offset = ($currentpage - 1) * $recordsPerPage;
+
+// Query to retrieve the records for the current page
+$query = "SELECT * FROM `student` LIMIT $offset, $recordsPerPage";
+$teacher_details = mysqli_query($connection, $query);
+
+// Query to get the total count of records
+$totalRecordsQuery = "SELECT COUNT(*) AS total FROM `student`";
+$totalRecordsResult = mysqli_query($connection, $totalRecordsQuery);
+$totalRecordsRow = mysqli_fetch_assoc($totalRecordsResult);
+$totalRecords = $totalRecordsRow['total'];
+$totalPages = ceil($totalRecords / $recordsPerPage);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <style>
-        .active {
-            background-color: #e9e3ff;
-            height: 30px;
-            border-radius: 5px;
-            padding-left: 4px;
-            padding-top: 2px;
-        }
-    </style>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Teachers Registeration</title>
+    <title>ADMIN DASHBOARD || DASHBOARD</title>
     <!-- assets -->
-    <!-- assets -->
+    <script src="../Assets/chart.min.js"></script>
     <link rel="stylesheet" href="../Assets/fonts/fonts.css">
     <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
 
     <!-- scripts -->
-    <!-- scripts -->
     <script src="../Assets/tailwind.js"></script>
     <script src="../Assets/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../css/admin.css">
 </head>
 
-<body class=" h-[100vh]" style="font-family: poppins;">
-    <div class="">
-        <!-- side nav -->
-        <!-- side nav -->
-        <div class="w-[200px] h-[100vh] absolute ">
-            <div class="p-8">
-                <!-- logo -->
-                <!-- logo -->
-                <div class=" ">
-                    <img class="h-20 w-20 rounded-full" src="../images/success-student-consulting_7109-29.avif" alt="">
-                    <p></p>
-                </div>
-                <!-- nav links -->
-                <!-- nav links -->
-                <div class="mt-8">
-                    <li class="list-none ">
-                        <i class="fa-regular fa-house text-gray-500"></i><a class="ml-2 text-gray-500" href="admin1.php">Dashboard</a>
-                    </li>
-                    <li class="list-none mt-4">
-                        <i class="fa-regular fa-briefcase text-gray-500"></i><a class="ml-2 text-gray-500" href="subjects.php">Subjects</a>
-                    </li>
-                    <li class="list-none mt-4 ">
-                        <i class="fa-regular fa-person-chalkboard text-gray-500"></i><a class="ml-2 text-gray-500" href="teachers_reg.php">Teachers</a>
-                    </li>
-                    <li class="list-none mt-4 active">
-                        <i class="fa-regular fa-briefcase text-gray-500"></i><a class="ml-2 text-gray-500" href="">Students</a>
-                    </li>
-                    <li class="list-none mt-4">
-                        <i class="fa-regular fa-briefcase text-gray-500"></i><a class="ml-2 text-gray-500" href="parents_reg.php">Parents</a>
-                    </li>
-                    <!-- <li class="list-none mt-4">
-                        <i class="fa-regular fa-briefcase text-gray-500"></i><a class="ml-2 text-gray-500" href="">User</a>
-                    </li>
-                    <li class="list-none mt-4">
-                        <i class="fa-regular fa-square-poll-vertical text-gray-500"></i><a class="ml-2 text-gray-500" href="">Results</a>
-                    </li>
-                    <li class="list-none mt-4">
-                        <i class="fa-regular fa-comment text-gray-500"></i><a class="ml-2 text-gray-500" href="">Chat</a>
-                    </li>
-                    <li class="list-none mt-4">
-                        <i class="fa-regular fa-gear text-gray-500"></i><a class="ml-2 text-gray-500" href="">Settings</a>
-                    </li> -->
+<body class="h-[100vh] bg-gray-300" style="font-family: poppins;">
+    <!-- blue background -->
+    <div class="h-[300px] bg-[#736FF8]"></div>
 
-                </div>
-            </div>
-
-            <!-- logout-->
-            <!-- logout-->
-            <form action="" method="post" onsubmit="return confirmLogout()">
-                <div class="h-10 bg-[#8a70d6] bottom-0 fixed w-[200px] text-black p-2 flex">
-                    <div>
-                        <input class="h-10 bg-[#8a70d6] bottom-0 fixed text-white p-2 w-40 flex text-[20px]" type="submit" value="LOGOUT" name="logout">
-                    </div>
-                    <div class="ml-auto ">
-                        <i class="fa-solid fa-right-from-bracket text-[22px]  text-blue-50"></i>
-                    </div>
-                </div>
-            </form>
+    <div class="-mt-[300px]">
+        <!-- side nav -->
+        <div class="w-60 h-[100vh] absolute p-6">
+            <?php include('../nav/nav.php') ?>
         </div>
         <!-- page content -->
-        <!-- page content -->
-        <div class=" ml-[210px] pt-6 pr-4">
-            <div class="grid grid-cols-3">
+        <div class="ml-[280px]  pt-6 pr-6">
+            <!-- page title1 -->
+            <div class="grid grid-cols-2">
                 <div>
-                    <p class="text-[25px]">Manage Students</p>
-                </div>
-                <!-- search bar -->
-                <!-- search bar -->
-                <div class="-ml-10">
-                    <form class="grid grid-cols-2 gap-10" action="" method="post">
-                        <input type="search" onkeyup="mySearch()" id="myInput" placeholder="Enter id..." class="bg-[#e9e3ff] h-10 w-[200px] rounded-md pl-4 outline-none">
-                        <input type="search" onkeyup="mySearch2()" id="myInput2" placeholder="Enter name..." class="bg-[#e9e3ff] h-10 w-[200px] rounded-md pl-4 outline-none">
-                    </form>
-                </div>
-                <!-- add teacherg -->
-                <!-- add teacher -->
-                <a href="student_add.php">
-                    <div class="flex justify-center -ml-20">
-                        <div class="h-10 w-10 bg-[#8a70d6] rounded-md flex justify-center items-center">
-                            <i class="fa-solid fa-regular fa-plus text-white"></i>
-                        </div>
+                    <div class="flex">
+                        <p class="text-gray-300 text-sm">Pages</p>
+                        <p class="text-white text-sm">/Manage Teachers</p>
                     </div>
-                </a>
+                    <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
+                </div>
+                <div class="flex pr-10 gap-6">
+                    <i class="fa-light fa-bell ml-auto text-white"></i>
+                    <i class="fa-sharp fa-solid fa-sun "></i>
+                    <a href="teacher_add.php">
+                        <button class="bg-white h-6  w-12 rounded-sm text-gray-600">Add</button>
+                    </a>
+                </div>
             </div>
 
-            <div class="mt-20 ">
-                <div class=" bg-gray-100 w-auto h-[544px] rounded-lg pt-10">
-                    <table id="myTable" class="table w-[1100px] ml-2" id="container">
-                        <thead class="p-2 bg-[#8a70d6] p w-[100px]">
-                            <tr class="text-left h-10 text-blue-100">
-                                <th>Student id</th>
-                                <th>NAME</th>
-                                <th>EMAIL</th>
-                                <th>ACTION</th>
-                            </tr>
-                        </thead>
-                        <?php
-                        // Selecting teachers detail from the database
-                        $teacher_details = mysqli_query($connection, "SELECT * FROM students  ");
-                        while ($row = mysqli_fetch_array($teacher_details)) {
-                        ?>
-                            <tbody>
-                                <tr class="even:bg-[#e9e3ff] h-10">
-                                    <td><?php echo $row["std_id"] ?></td>
-                                    <td><?php echo $row["name"] ?></td>
-                                    <td><?php echo $row["email"] ?></td>
-                                    <td>
-                                        <?php
-                                        echo '
-                                            <div class="flex gap-2">
-                                                <a href="teacher_reg.php?id=' . $row['std_id'] . '">
-                                                <div class="bg-[#8a70d6] text-white w-8 text-center rounded-sm"><button><i class="fa fa-edit"></i></button></div>
-                                            </a>
-                                                <a href="teachers_reg.php?delete=' . $row['std_id'] . '">
-                                                    <div class="bg-red-600 text-white w-8 text-center rounded-sm"><button onclick="return confirmDelete()"><i class="fa fa-trash"></i></button><div>
-                                                </a>
-                                            </div>
-                                            ';
-                                        ?>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        <?php
-                        }
-                        ?>
-                    </table>
-
+            <div class="bg-white  w-[1050px] rounded-lg shadow-sm mt-10 p-6">
+                <table id="myTable" class="table w-[990px] ml-2" id="container">
+                    <thead class="p-2  p w-[100px]">
+                        <tr class="text-left text-[12px] h-10 text-gray-400">
+                            <th>ID</th>
+                            <th>IMAGES</th>
+                            <th>NAME</th>
+                            <th>EMAIL</th>
+                            <th>DOB</th>
+                            <th>PHONE</th>
+                            <th>GENDER</th>
+                            <th>DATE</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <?php
+                    while ($row = mysqli_fetch_array($teacher_details)) {
+                        $admin_image = $row['image'];
+                    ?>
+                    <tbody class="text-[13px] text-gray-600">
+                        <tr class=" h-14">
+                            <td><?php echo $row["id"] ?></td>
+                            <td>
+                                <?php
+                                    // Output the image
+                                    echo "<img src='../images/$admin_image' alt='admin image' class='h-[40px] w-[40px] rounded-full'>";
+                                    ?>
+                            </td>
+                            <td><?php echo $row["name"] ?></td>
+                            <td><?php echo $row["email"] ?></td>
+                            <td><?php echo $row["birthDate"] ?></td>
+                            <td><?php echo $row["phoneNo"] ?></td>
+                            <td><?php echo $row["gender"] ?></td>
+                            <td><?php echo $row["date"] ?></td>
+                            <td>
+                                <div class="flex gap-[2px]">
+                                    <a href="teacher_reg.php?id=<?php echo $row['id'] ?>">
+                                        <div class="bg-green-500 text-white w-6 text-center rounded-sm">
+                                            <button><i class="fa fa-edit"></i></button>
+                                        </div>
+                                    </a>
+                                    <a href="teachers_reg.php?delete=<?php echo $row['id'] ?>">
+                                        <div class="bg-red-600 text-white w-6 text-center rounded-sm">
+                                            <button onclick="return confirmDelete()"><i
+                                                    class="fa fa-trash"></i></button>
+                                        </div>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <!-- pagination -->
+                <!-- pagination -->
+                <div class="pagination mt-4 gap-10">
+                    <?php if ($totalPages > 1) { ?>
+                    <?php if ($currentpage > 1) { ?>
+                    <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
+                    <?php } ?>
+                    <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
+                    <a href="?page=<?php echo $i; ?>"
+                        class="pagination-link <?php echo ($i == $currentpage) ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                    <?php } ?>
+                    <?php if ($currentpage < $totalPages) { ?>
+                    <a href="?page=<?php echo ($currentpage + 1); ?>" class="pagination-link"><button
+                            class="bg-blue-400 text-white w-20 rounded-sm">Next</button></a>
+                    <?php } ?>
+                    <?php } ?>
                 </div>
             </div>
         </div>
     </div>
 
-
-
     <!-- confirm before delete -->
     <script>
-        function confirmLogout() {
-            return confirm("Are you sure you want to logout?");
-        }
-    </script>
-
-    <!-- live search -->
-    <script>
-        function mySearch() {
-            // Declare variables
-            var input, filter, table, tr, td, i, txtValue;
-            //getting the search input
-            input = document.getElementById("myInput");
-            //converting the input to upper case
-            filter = input.value.toUpperCase();
-            //getting the data in the table
-            table = document.getElementById("myTable");
-            tr = table.getElementsByTagName("tr");
-            // Loop through all table rows, and hide those who don't match the search query
-            // Loop through all table rows, and hide those who don't match the search query
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-
-        function mySearch2() {
-            // Declare variables
-            var input, filter, table, tr, td, i, txtValue;
-            //getting the search input
-            input = document.getElementById("myInput2");
-            //converting the input to upper case
-            filter = input.value.toUpperCase();
-            //getting the data in the table
-            table = document.getElementById("myTable");
-            tr = table.getElementsByTagName("tr");
-            // Loop through all table rows, and hide those who don't match the search query
-            // Loop through all table rows, and hide those who don't match the search query
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[2];
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this record?");
+    }
     </script>
 </body>
 
 </html>
-<?php
-//checking if user is logged in
-if (isset($_POST['logout'])) {
-    //unset all the session
-    session_unset();
-
-    //destroying the session
-    session_destroy();
-
-    //redirecting the user to the login page
-    header("Location:index.php");
-}
-?>

@@ -24,64 +24,60 @@ if (isset($_POST['logout'])) {
 //adding new admin to the system
 //adding new admin to the system
 if (isset($_POST['register'])) {
+    $course = $_POST['subject'];
     $className = $_POST['name'];
     $subClass = $_POST['subClass'];
     $teacherId = $_POST['teacherId'];
     $date = date("Y-m-d");
 
-    // Database connection
-    $connection = mysqli_connect('localhost', 'root', '', 'management_class');
-    if (!$connection) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
-
-    // Check if the teacher ID exists
-    $checkTeacherQuery = "SELECT COUNT(*) FROM teachers WHERE id = $teacherId";
-    $checkTeacherResult = mysqli_query($connection, $checkTeacherQuery);
-    $teacherCount = mysqli_fetch_array($checkTeacherResult)[0];
-
-    // Check if the class already has a teacher assigned
-    $checkClassQuery = "SELECT COUNT(*) FROM classese WHERE class_name = '$className' AND sub_class = '$subClass'";
-    $checkClassResult = mysqli_query($connection, $checkClassQuery);
-    $classCount = mysqli_fetch_array($checkClassResult)[0];
+    // Check if the teacher exists in the teachers table
+    $checkQuery = "SELECT COUNT(*) FROM teachers WHERE id = $teacherId";
+    $checkResult = mysqli_query($connection, $checkQuery);
+    $teacherCount = mysqli_fetch_array($checkResult)[0];
 
     if ($teacherCount > 0) {
-        if ($classCount > 0) {
-            // Class already has a teacher assigned
-            echo "<script>
-                    alert('This class already has a teacher assigned');
-                    window.location.href = 'class_add.php';
-                  </script>";
-        } else {
-            // Assign the teacher to the class
-            $query = "INSERT INTO classese (class_name, sub_class, teacher_id, date) VALUES ('$className', '$subClass', '$teacherId', '$date')";
+        // Check if the class, subclass, and subject combination is already assigned to any teacher
+        $checkAssignmentQuery = "SELECT COUNT(*) FROM teacherClass WHERE class_id = $className AND sub_class = '$subClass' AND `subject` = $course";
+        $checkAssignmentResult = mysqli_query($connection, $checkAssignmentQuery);
+        $assignmentCount = mysqli_fetch_array($checkAssignmentResult)[0];
+
+        if ($assignmentCount == 0) {
+            // Insert query
+            $query = "INSERT INTO teacherClass (class_id, teacher_id, sub_class, `subject`, date) VALUES ($className, $teacherId, '$subClass', $course, '$date')";
             $insert = mysqli_query($connection, $query);
 
             if ($insert) {
                 // Insertion successful
                 echo "<script>
                         alert('Class registered successfully');
-                        window.location.href = 'class_reg.php';
+                        window.location.href = 'teacher_class_assigment.php';
                       </script>";
             } else {
                 // Unable to register class
                 echo "<script>
                         alert('Unable to register class');
-                        window.location.href = 'class_add.php';
+                        window.location.href = 'teacher_class_add.php';
                       </script>";
             }
+        } else {
+            // Class, subclass, and subject already assigned to a teacher
+            echo "<script>
+                    alert('There is a teacher assigned to teach this class this subject'  );
+                    window.location.href = 'teacher_class_add.php';
+                  </script>";
         }
     } else {
         // Invalid teacher ID
         echo "<script>
                 alert('Invalid teacher ID');
-                window.location.href = 'class_add.php';
+                window.location.href = 'teacher_class_add.php';
               </script>";
     }
 
     // Close the database connection
     mysqli_close($connection);
 }
+
 
 
 
@@ -131,7 +127,7 @@ if (isset($_POST['register'])) {
                 <div>
                     <div class="flex">
                         <p class="text-gray-300 text-sm">Pages</p>
-                        <p class="text-white text-sm">/Add Class</p>
+                        <p class="text-white text-sm">/Add Class to teacher</p>
                     </div>
                     <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
                 </div>
@@ -153,22 +149,32 @@ if (isset($_POST['register'])) {
             </div>
 
             <div class="flex items-center mb-8 flex justify-center mt-10">
-                <div class="h-[360px] w-[600px] bg-white rounded-lg p-6">
+                <div class="h-[410px] w-[600px] bg-white rounded-lg p-6">
                     <form id="multiStepForm" method="post" action="" enctype="multipart/form-data">
                         <!-- first form -->
                         <!-- first form -->
                         <div class="mb-6 step" id="step1">
                             <div>
+
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Class Teacher</label>
+                                <input type="text" id="firstName" name="teacherId" placeholder="Enter teacher id..."
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"><br><br>
+
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">
                                     Name</label>
                                 <select type="text" id="firstName" name="name"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your name...">
+                                    placeholder="Enter email...">
                                     <option value="">-- select class --</option>
-                                    <option value=" JSH 1">JHS 1</option>
-                                    <option value=" JSH 2">JHS 2</option>
-                                    <option value=" JHS 3">JHS 3</option>
+                                    <?php
+                                    $query = "SELECT * FROM classese";
+                                    $result = mysqli_query($connection, $query);
+                                    while ($row = mysqli_fetch_array($result)) {
+                                        echo "<option value='" . $row['id'] . "'>" . $row['class_name'] . "</option>";
+                                    }
+                                    ?>
                                 </select><br><br>
+
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Sub Class</label>
                                 <select type="text" id="firstName" name="subClass"
@@ -180,10 +186,19 @@ if (isset($_POST['register'])) {
                                     <option value="C">C</option>
                                 </select><br><br>
 
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Class Teacher</label>
-                                <input type="text" id="firstName" name="teacherId" placeholder="Enter teacher id..."
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"><br><br>
-
+                                <select
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                    name="subject">
+                                    <?php
+                                        $query = "SELECT id, course FROM courses";
+                                        $select = mysqli_query($connection, $query);
+                                        while ($row = mysqli_fetch_array($select)) {
+                                    ?>
+                                    <option value="<?php echo $row['id']; ?>"><?php echo $row['course']; ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select>
 
                             </div>
 

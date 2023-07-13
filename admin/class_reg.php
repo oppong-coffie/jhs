@@ -90,11 +90,11 @@ $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($currentpage - 1) * $recordsPerPage;
 
 // Query to retrieve the records for the current page
-$query = "SELECT * FROM `teachercourse` LIMIT $offset, $recordsPerPage";
+$query = "SELECT * FROM `classese` LIMIT $offset, $recordsPerPage";
 $teacher_details = mysqli_query($connection, $query);
 
 // Query to get the total count of records
-$totalRecordsQuery = "SELECT COUNT(*) AS total FROM `teachercourse`";
+$totalRecordsQuery = "SELECT COUNT(*) AS total FROM `classese`";
 $totalRecordsResult = mysqli_query($connection, $totalRecordsQuery);
 $totalRecordsRow = mysqli_fetch_assoc($totalRecordsResult);
 $totalRecords = $totalRecordsRow['total'];
@@ -143,9 +143,11 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
                     <i class="fa-sharp fa-solid fa-sun "></i>
-                    <button  class="bg-white h-6  w-10 rounded-sm shadow-sm text-center">
-                        Add
-                    </button>
+                    <a href="class_add.php">
+                        <button class="bg-white h-6  w-10 rounded-sm shadow-sm text-center">
+                            Add
+                        </button>
+                    </a>
 
 
                 </div>
@@ -156,29 +158,27 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                     <thead class="p-2">
                         <tr class="text-left text-[12px] h-10 text-gray-400">
                             <th>ID</th>
-                            <th>TEACHER ID</th>
-                            <th>SUBJECT</th>
+                            <th>CLASS NAME</th>
+                            <th>SUB CLASS</th>
+                            <th>TEACHER NAME</th>
                             <th>DATE</th>
                             <th>ACTION</th>
                         </tr>
                     </thead>
-                    <?php
-    while ($row = mysqli_fetch_array($teacher_details)) {
-        ?>
                     <tbody class="text-[13px] text-gray-600">
-                        <tr class="even:bg-[#e9e3ff] h-10">
+                        <?php
+        while ($row = mysqli_fetch_array($teacher_details)) {
+            $teacher_id = $row["teacher_id"];
+            $teacher_name = mysqli_query($connection, "SELECT name FROM teachers WHERE id = '$teacher_id'");
+            $t_row = mysqli_fetch_array($teacher_name);
+            $teacher_name = $t_row["name"];
+        ?>
+                        <tr class=" h-10">
                             <td><?php echo $row["id"] ?></td>
-                            <td><?php echo $row["teachers_id"] ?></td>
-                            <td>
-                                <?php
-                    // Fetch course name based on subject_id
-                    $subjectId = $row["subject_id"];
-                    $query = "SELECT course FROM courses WHERE id = $subjectId";
-                    $result = mysqli_query($connection, $query);
-                    $courseName = mysqli_fetch_array($result)['course'];
-                    echo $courseName;
-                    ?>
-                            </td>
+                            
+                            <td><?php echo $row["class_name"] ?></td>
+                            <td><?php echo $row["sub_class"] ?></td>
+                            <td><?php echo $teacher_name ?></td>
                             <td><?php echo $row["date"] ?></td>
                             <td>
                                 <div class="flex gap-[2px]">
@@ -196,11 +196,12 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                                 </div>
                             </td>
                         </tr>
+                        <?php
+        }
+        ?>
                     </tbody>
-                    <?php
-    }
-    ?>
                 </table>
+
 
                 <!-- pagination -->
                 <!-- pagination -->
