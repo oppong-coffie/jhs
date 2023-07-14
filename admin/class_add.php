@@ -165,9 +165,9 @@ if (isset($_POST['register'])) {
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter your name...">
                                     <option value="">-- select class --</option>
-                                    <option value=" JSH 1">JHS 1</option>
-                                    <option value=" JSH 2">JHS 2</option>
-                                    <option value=" JHS 3">JHS 3</option>
+                                    <option value="JHS ONE">JHS ONE</option>
+                                    <option value="JHS TWO">JHS TWO</option>
+                                    <option value="JHS THREE">JHS THREE</option>
                                 </select><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Sub Class</label>

@@ -29,11 +29,11 @@ $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($currentpage - 1) * $recordsPerPage;
 
 // Query to retrieve the records for the current page
-$query = "SELECT * FROM `student` LIMIT $offset, $recordsPerPage";
+$query = "SELECT * FROM `results` LIMIT $offset, $recordsPerPage";
 $teacher_details = mysqli_query($connection, $query);
 
 // Query to get the total count of records
-$totalRecordsQuery = "SELECT COUNT(*) AS total FROM `student`";
+$totalRecordsQuery = "SELECT COUNT(*) AS total FROM `results`";
 $totalRecordsResult = mysqli_query($connection, $totalRecordsQuery);
 $totalRecordsRow = mysqli_fetch_assoc($totalRecordsResult);
 $totalRecords = $totalRecordsRow['total'];
@@ -66,7 +66,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
     <div class="-mt-[300px]">
         <!-- side nav -->
         <div class="w-60 h-[100vh] absolute p-6">
-            <?php include('../nav/nav.php') ?>
+            <?php include('../nav/teacher_nav.php') ?>
         </div>
         <!-- page content -->
         <div class="ml-[280px]  pt-6 pr-6">
@@ -82,7 +82,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
                     <i class="fa-sharp fa-solid fa-sun "></i>
-                    <a href="student_add.php">
+                    <a href="results_add.php">
                         <button class="bg-white h-6  w-12 rounded-sm text-gray-600">Add</button>
                     </a>
                 </div>
@@ -93,34 +93,68 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                     <thead class="p-2  p w-[100px]">
                         <tr class="text-left text-[12px] h-10 text-gray-400">
                             <th>ID</th>
-                            <th>IMAGES</th>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>DOB</th>
-                            <th>PHONE</th>
-                            <th>GENDER</th>
+                            <th>STUDENT ID</th>
+                            <th>YEAR</th>
+                            <th>SEMESTER</th>
+                            <th>CLASS</th>
+                            <th>SUB CLASS</th>
+                            <th>SUBJECT</th>
+                            <th>MARKS</th>
+                            <th>GRADE</th>
+                            <th>Remarks</th>
                             <th>DATE</th>
                             <th>ACTION</th>
                         </tr>
                     </thead>
                     <?php
                     while ($row = mysqli_fetch_array($teacher_details)) {
-                        $admin_image = $row['image'];
+                        // Grading logic
+    $marks = $row["marks"];
+    $grade = "";
+
+    if ($marks >= 90) {
+        $grade = "A1";
+    } elseif ($marks >= 80) {
+        $grade = "B2";
+    } elseif ($marks >= 70) {
+        $grade = "B3";
+    } elseif ($marks >= 60) {
+        $grade = "C4";
+    } elseif ($marks >= 50) {
+        $grade = "D5";
+    } else {
+        $grade = "F";
+    }
+
+    $marks = $row["marks"];
+    $remark = "";
+
+    if ($marks >= 90) {
+        $remark= "Excellent";
+    } elseif ($marks >= 80) {
+        $remark = "Very Good";
+    } elseif ($marks >= 70) {
+        $remark = "Good";
+    } elseif ($marks >= 60) {
+        $remark = "pass";
+    } elseif ($marks >= 50) {
+        $remark = "Fair";
+    } else {
+        $remark = "Fail";
+    }
                     ?>
                     <tbody class="text-[13px] text-gray-600">
                         <tr class=" h-14">
                             <td><?php echo $row["id"] ?></td>
-                            <td>
-                                <?php
-                                    // Output the image
-                                    echo "<img src='../images/$admin_image' alt='admin image' class='h-[40px] w-[40px] rounded-full'>";
-                                    ?>
-                            </td>
-                            <td><?php echo $row["name"] ?></td>
-                            <td><?php echo $row["email"] ?></td>
-                            <td><?php echo $row["birthDate"] ?></td>
-                            <td><?php echo $row["phoneNo"] ?></td>
-                            <td><?php echo $row["gender"] ?></td>
+                            <td><?php echo $row["student_id"] ?></td>
+                            <td><?php echo $row["year"] ?></td>
+                            <td><?php echo $row["semester"] ?></td>
+                            <td><?php echo $row["class"] ?></td>
+                            <td><?php echo $row["sub_class"] ?></td>
+                            <td><?php echo $row["subject"] ?></td>
+                            <td><?php echo $row["marks"] ?></td>
+                            <td><?php echo $grade ?></td>
+                            <td><?php echo $remark ?></td>
                             <td><?php echo $row["date"] ?></td>
                             <td>
                                 <div class="flex gap-[2px]">
@@ -148,7 +182,8 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 <div class="pagination mt-4 gap-10">
                     <?php if ($totalPages > 1) { ?>
                     <?php if ($currentpage > 1) { ?>
-                    <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
+                    <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button
+                            class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
                     <?php } ?>
                     <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
                     <a href="?page=<?php echo $i; ?>"

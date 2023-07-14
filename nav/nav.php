@@ -30,6 +30,14 @@
                         href="class_reg.php">Classes</a>
                 </li>
                 <li class="list-none mt-4">
+                    <i class="fa-regular fa-square-poll-vertical text-gray-500 text-sm"></i><a
+                        class="ml-2 text-gray-500 text-sm" href="semester.php">Semester</a>
+                </li>
+                <li class="list-none mt-4">
+                    <i class="fa-regular fa-square-poll-vertical text-gray-500 text-sm"></i><a
+                        class="ml-2 text-gray-500 text-sm" href="accademicYear.php">Accademic Year</a>
+                </li>
+                <li class="list-none mt-4">
                     <i class="fa-regular fa-briefcase text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
                         href="teacher_reg.php">Teachers</a>
                 </li>
@@ -57,20 +65,13 @@
                 </li>
                 <li class="list-none mt-4">
                     <i class="fa-regular fa-square-poll-vertical text-gray-500 text-sm"></i><a
-                        class="ml-2 text-gray-500 text-sm" href="">Results</a>
+                        class="ml-2 text-gray-500 text-sm" href="results.php">Results</a>
                 </li>
-                <li class="list-none mt-4">
-                    <i class="fa-regular fa-comment text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
-                        href="">Chat</a>
-                </li>
-                <li class="list-none mt-4">
-                    <i class="fa-regular fa-gear text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
-                        href="">Settings</a>
-                </li>
+              
             </div>
 
             <form action="" method="post" onsubmit="return confirmLogout()">
-                <div class="">
+                <div class=" mt-[20px]">
                     <input class="h-10 rounded-md  bg-[#736FE1]  text-white flex justify-center w-40 flex text-md"
                         type="submit" value="LOGOUT" name="logout">
                 </div>

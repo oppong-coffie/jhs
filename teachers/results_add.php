@@ -26,40 +26,31 @@ if (isset($_POST['logout'])) {
 if (isset($_POST["register"])) {
     // Retrieving data from the form and sanitizing input
     // Retrieving data from the form and sanitizing input
-    $password = mysqli_real_escape_string($connection, $_POST["password"]);
-    $role = mysqli_real_escape_string($connection, $_POST["role"]);
-    $name = mysqli_real_escape_string($connection, $_POST["name"]);
-    $email = mysqli_real_escape_string($connection, $_POST["email"]);
-    $phone = $_POST["phone"];
-    $parent_id = $_POST["parent_id"];
-    $dob = mysqli_real_escape_string($connection, $_POST["dob"]);
-    $gender = mysqli_real_escape_string($connection, $_POST["gender"]);
-    $image = $_FILES["image"]["name"];
-    $img_temp_name = $_FILES['image']['tmp_name'];
-    $img_path = "../images/" . $image;
+    $id =  $_POST["id"];
+    $year = mysqli_real_escape_string($connection, $_POST["year"]);
+    $semester = mysqli_real_escape_string($connection, $_POST["semester"]);
+    $class = mysqli_real_escape_string($connection, $_POST["class"]);
+    $subclass = $_POST["subclass"];
+    $subject = mysqli_real_escape_string($connection, $_POST["subject"]);
+    $marks = mysqli_real_escape_string($connection, $_POST["marks"]);
+    $result_type = mysqli_real_escape_string($connection, $_POST["result_type"]);
     $date = date("Y-m-d");
 
     // Now let's move the uploaded image into the folder: image
-    if (move_uploaded_file($img_temp_name, $img_path)) {
         // Inserting data into the database
-        $insert_query = mysqli_query($connection, "INSERT INTO `student` ( `name`, `image`, `email`, `birthDate`, `phoneNo`, `gender`, `role`,`password`, parent_id, `date`) VALUES ( '$name', '$image', '$email', '$dob', '$phone', '$gender', '$role','$password', '$parent_id','$date')");
+        $insert_query = mysqli_query($connection, "INSERT INTO `results` ( `student_id`, `year`, `semester`, `class`, `sub_class`, `subject`, `marks`,`result_type`,`date`) VALUES ( '$id', '$year', '$semester', '$class', '$subclass', '$subject', '$marks','$result_type','$date')");
 
 
         if ($insert_query) {
             echo "<script>
                 alert('Registration Successful');
-                window.location.href = './teacher_reg.php';
+                window.location.href = './results.php';
             </script>";
         } else {
             echo "<script>
                 alert('Registration Failed');
             </script>";
         }
-    } else {
-        echo "<script>
-            alert('Failed to upload image');
-        </script>";
-    }
 }
 
 
@@ -97,7 +88,7 @@ if (isset($_POST["register"])) {
         <!-- side nav -->
         <!-- side nav -->
         <div class="w-60 h-[100vh] absolute p-6">
-            <?php include('../nav/nav.php') ?>
+            <?php include('../nav/teacher_nav.php') ?>
         </div>
         <!-- page content -->
         <!-- page content -->
@@ -108,7 +99,7 @@ if (isset($_POST["register"])) {
                 <div>
                     <div class="flex">
                         <p class="text-gray-300 text-sm">Pages</p>
-                        <p class="text-white text-sm">/Add Student</p>
+                        <p class="text-white text-sm">/Add Student Results</p>
                     </div>
                     <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
                 </div>
@@ -147,24 +138,41 @@ if (isset($_POST["register"])) {
                         <!-- first form -->
                         <div class="mb-6 step" id="step1">
                             <div>
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">
-                                    Name</label>
-                                <input type="text" id="firstName" name="name"
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Student id</label>
+                                <input type="text" id="firstName" name="id"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your name..."><br><br>
+                                    placeholder="Enter student id..."><br><br>
 
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Email</label>
-                                <input type="text" id="firstName" name="email"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter email..."><br><br>
-
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Gender</label>
-                                <select type="text" id="firstName" name="gender"
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Year</label>
+                                <select type="text" id="firstName" name="year"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter your first name">
-                                    <option value="">-- select gender --</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                    <option value="">-- select year --</option>
+                                    <?php
+                                    $query = "SELECT * FROM `accademicyear`";
+                                    $result = mysqli_query($connection, $query);
+                                    while ($row = mysqli_fetch_array($result)) {
+                                    ?>
+                                    <option value="<?php echo $row['year'] ?>"><?php echo $row['year'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select><br><br>
+
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Semester</label>
+                                <select type="text" id="firstName" name="semester"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                    placeholder="Enter your first name">
+                                    <option value="">-- select semester --</option>
+                                    <?php
+                                    $query = "SELECT * FROM `semester`";
+                                    $result = mysqli_query($connection, $query);
+                                    while ($row = mysqli_fetch_array($result)) {
+                                    ?>
+                                    <option value="<?php echo $row['name'] ?>"><?php echo $row['name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
                                 </select><br><br>
                             </div>
 
@@ -179,23 +187,57 @@ if (isset($_POST["register"])) {
                         <!-- second form -->
                         <div class="mb-6 hidden step" id="step2">
                             <div>
-                                <label class=" text-gray-700  mb-2 text-sm" for="phone">Phone</label>
-                                <input type="text" id="firstName" name="phone"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter phone..."><br><br>
-
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Password</label>
-                                <input type="text" id="firstName" name="password"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter password..."><br><br>
-
-                                    <label class=" text-gray-700  mb-2 text-sm" for="firstName">Role</label>
-                                <select type="text" id="firstName" name="role"
+                                <label class=" text-gray-700  mb-2 text-sm" for="phone">Class</label>
+                                <select type="text" id="firstName" name="class"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter your first name">
-                                    <option value="">-- select role --</option>
-                                    <option value="Admin">Admin</option>
+                                    <option value="">-- select class --</option>
+                                    <?php
+                                    $query = "SELECT * FROM `classese`";
+                                    $result = mysqli_query($connection, $query);
+                                    while ($row = mysqli_fetch_array($result)) {
+                                    ?>
+                                    <option value="<?php echo $row['class_name'] ?>"><?php echo $row['class_name'] ?></option>
+                                    <?php
+                                    }
+
+                                    ?>
                                 </select><br><br>
+
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">sub class</label>
+                                <select type="text" id="firstName" name="subclass"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                    placeholder="Enter your first name">
+                                    <option value="">-- select sub class --</option>
+                                    <?php
+                                    $query = "SELECT * FROM `classese`";
+                                    $result = mysqli_query($connection, $query);
+                                    while ($row = mysqli_fetch_array($result)) {
+                                    ?>
+                                    <option value="<?php echo $row['sub_class'] ?>"><?php echo $row['sub_class'] ?></option>
+                                    <?php
+                                    }
+
+                                    ?>
+                                </select><br><br>
+
+                                    <label class=" text-gray-700  mb-2 text-sm" for="firstName">Subject</label>
+                                    <select type="text" id="firstName" name="subject"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                    placeholder="Enter your first name">
+                                    <option value="">-- select subjects--</option>
+                                    <?php
+                                    $query = "SELECT * FROM `courses`";
+                                    $result = mysqli_query($connection, $query);
+                                    while ($row = mysqli_fetch_array($result)) {
+                                    ?>
+                                    <option value="<?php echo $row['course'] ?>"><?php echo $row['course'] ?></option>
+                                    <?php
+                                    }
+
+                                    ?>
+                                </select><br><br>
+
 
                             </div>
                             <div>
@@ -213,23 +255,21 @@ if (isset($_POST["register"])) {
                         <div class="mb-6 hidden step" id="step3">
                             <div>
 
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Image</label>
-                                <input type="file" id="firstName" name="image"
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Marks</label>
+                                <input type="text" id="firstName" name="marks"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name"><br><br>
+                                    placeholder="Enter marks.."><br><br>
 
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Date of Birth</label>
-                                <input type="date" id="firstName" name="dob"
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Result Type</label>
+                                <select type="text" id="firstName" name="result_type"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name"><br><br>
-
-                            
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">
-                                   Parent id</label>
-                                <input type="text" id="firstName" name="parent_id"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter parent id..."><br><br>
-
+                                    placeholder="Enter your first name">
+                                    <option value="">-- select result type --</option>
+                                    <option value="Examinatoin">Examination</option>
+                                    <option value="Mid Term">Mid Term</option>
+                                    <option value="Exercise">Exercise</option>
+                                    <option value="Assignment">Assignment</option> 
+                                </select><br><br>
                             </div>
                             <div>
                                 <button type="button"

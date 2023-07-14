@@ -117,7 +117,7 @@ if (isset($_POST["login"])) {
         $teacherstatement = mysqli_fetch_array($teacherquery);
         if ($teacherstatement) {
             $_SESSION['teacherid'] =$teacherstatement['teacher_id'];
-            header("Location: teacher_dashboard.php");
+            header("Location:./teachers/teacher_dashboard.php");
             exit();
         } else {
             echo "Incorrect credentials";
@@ -146,22 +146,18 @@ if (isset($_POST["login"])) {
             }
     }
 
-        else if ($role == "parent") {
-            $studentsql = "SELECT * FROM parents WHERE email='$email' AND password='$password'";
-            $studentquery = mysqli_query($connection, $studentsql);
-            $studentstatement = mysqli_fetch_array($studentquery);
-            if ($studentstatement) {
-                $_SESSION['std_id'] =$studentstatement['std_id'];
-                $_SESSION['id'] ='$studentstatement[]';
-                header("Location:./parents/parent_dashboard.php");
-                exit();
-            } else {
-                echo "Incorrect credentials";
-            }
+    else if ($role == "parent") {
+        $studentsql = "SELECT * FROM parents WHERE email='$email' AND password='$password'";
+        $studentquery = mysqli_query($connection, $studentsql);
+        if ($row = mysqli_fetch_array($studentquery)) {
+            $_SESSION['email'] =$row['email'];
+            header("Location:./parents/parent_dashboard.php");
+            exit();
+        } else {
+            echo "Incorrect credentials";
+        }
     }
-        
-    
-    else {
+         else {
         echo "<script>alert('Incorrect user');</script>";
     }
 }

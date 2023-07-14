@@ -3,6 +3,26 @@ session_start();
 
 // Database connection
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
+if(isset($_POST['submit'])){
+    $course = $_POST['course'];
+    $date =date('Y-m-d');
+   
+    $query = "INSERT INTO `semester`(`name`, `date`) VALUES ('$course', '$date')";
+    $insert = mysqli_query($connection,$query);
+    if($insert){
+        //alert
+        echo "<script>
+                alert('Registration Successful');
+                window.location.href = 'semester.php';
+            </script>";
+       
+    }else{
+        echo "<script>
+                alert('Unable to register course ');
+                window.location.href = 'semester.php';
+            </script>";
+    }
+}
 
 
 //deleting records
@@ -20,7 +40,7 @@ if (isset($_GET['delete'])) {
 
 
 // Number of records per page
-$recordsPerPage = 8;
+$recordsPerPage = 10;
 
 // Get the current page number from the URL parameter
 $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -29,11 +49,11 @@ $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($currentpage - 1) * $recordsPerPage;
 
 // Query to retrieve the records for the current page
-$query = "SELECT * FROM `student` LIMIT $offset, $recordsPerPage";
+$query = "SELECT * FROM `semester` LIMIT $offset, $recordsPerPage";
 $teacher_details = mysqli_query($connection, $query);
 
 // Query to get the total count of records
-$totalRecordsQuery = "SELECT COUNT(*) AS total FROM `student`";
+$totalRecordsQuery = "SELECT COUNT(*) AS total FROM `semester`";
 $totalRecordsResult = mysqli_query($connection, $totalRecordsQuery);
 $totalRecordsRow = mysqli_fetch_assoc($totalRecordsResult);
 $totalRecords = $totalRecordsRow['total'];
@@ -75,52 +95,48 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 <div>
                     <div class="flex">
                         <p class="text-gray-300 text-sm">Pages</p>
-                        <p class="text-white text-sm">/Manage Teachers</p>
+                        <p class="text-white text-sm">/Manage Subjects</p>
                     </div>
                     <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
                 </div>
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
                     <i class="fa-sharp fa-solid fa-sun "></i>
-                    <a href="student_add.php">
-                        <button class="bg-white h-6  w-12 rounded-sm text-gray-600">Add</button>
-                    </a>
+
                 </div>
             </div>
 
+            <!-- page title2 -->
+            <div class="text-right">
+                <form action="" method="post">
+                    <input type="text"
+                        class="h-8 rounded-sm text-sm pl-2 w-60 outline-none border focus:border-blue-300 shadow-sm"
+                        placeholder="Enter semester name..." name="course">
+
+                    
+                    <input type="submit" value="Add"
+                        class="bg-white h-8  w-12 rounded-sm text-gray-600 shadow-sm text-center  ml-2 " name="submit">
+
+                </form>
+            </div>
+
             <div class="bg-white  w-[1050px] rounded-lg shadow-sm mt-10 p-6">
-                <table id="myTable" class="table w-[990px] ml-2" id="container">
-                    <thead class="p-2  p w-[100px]">
+                <table id="myTable" class="w-[990px] ml-2" id="container">
+                    <thead class="p-2 ">
                         <tr class="text-left text-[12px] h-10 text-gray-400">
                             <th>ID</th>
-                            <th>IMAGES</th>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>DOB</th>
-                            <th>PHONE</th>
-                            <th>GENDER</th>
+                            <th >Subject NAME</th>
                             <th>DATE</th>
                             <th>ACTION</th>
                         </tr>
                     </thead>
                     <?php
                     while ($row = mysqli_fetch_array($teacher_details)) {
-                        $admin_image = $row['image'];
                     ?>
                     <tbody class="text-[13px] text-gray-600">
-                        <tr class=" h-14">
+                        <tr class="even:bg-[#e9e3ff] h-10">
                             <td><?php echo $row["id"] ?></td>
-                            <td>
-                                <?php
-                                    // Output the image
-                                    echo "<img src='../images/$admin_image' alt='admin image' class='h-[40px] w-[40px] rounded-full'>";
-                                    ?>
-                            </td>
-                            <td><?php echo $row["name"] ?></td>
-                            <td><?php echo $row["email"] ?></td>
-                            <td><?php echo $row["birthDate"] ?></td>
-                            <td><?php echo $row["phoneNo"] ?></td>
-                            <td><?php echo $row["gender"] ?></td>
+                            <td ><?php echo $row["name"] ?></td>
                             <td><?php echo $row["date"] ?></td>
                             <td>
                                 <div class="flex gap-[2px]">
@@ -145,10 +161,11 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 </table>
                 <!-- pagination -->
                 <!-- pagination -->
-                <div class="pagination mt-4 gap-10">
+                <div class="pagination mt-10 gap-10">
                     <?php if ($totalPages > 1) { ?>
                     <?php if ($currentpage > 1) { ?>
-                    <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
+                    <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button
+                            class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
                     <?php } ?>
                     <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
                     <a href="?page=<?php echo $i; ?>"
