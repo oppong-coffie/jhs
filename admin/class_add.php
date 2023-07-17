@@ -1,45 +1,46 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['email'])){
 
-}
 
+//database connection
 //database connection
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
 
+//checking if user is logged in
 //checking if user is logged in
 if (isset($_POST['logout'])) {
     //unset all the session
     session_unset();
 
     //destroying the session
+    //destroying the session
     session_destroy();
 
+    //redirecting the user to the login page
     //redirecting the user to the login page
     header("Location:index.php");
 }
 
-//adding new admin to the system
-//adding new admin to the system
+//adding new class to the system
+//adding new class to the system
 if (isset($_POST['register'])) {
+    //fetchingg data from the form
+    //fetchingg data from the form
     $className = $_POST['name'];
     $subClass = $_POST['subClass'];
     $teacherId = $_POST['teacherId'];
     $date = date("Y-m-d");
 
-    // Database connection
-    $connection = mysqli_connect('localhost', 'root', '', 'management_class');
-    if (!$connection) {
-        die("Connection failed: " . mysqli_connect_error());
-    }
 
+    // Check if the teacher ID exists
     // Check if the teacher ID exists
     $checkTeacherQuery = "SELECT COUNT(*) FROM teachers WHERE id = $teacherId";
     $checkTeacherResult = mysqli_query($connection, $checkTeacherQuery);
     $teacherCount = mysqli_fetch_array($checkTeacherResult)[0];
 
+    // Check if the class already has a teacher assigned
     // Check if the class already has a teacher assigned
     $checkClassQuery = "SELECT COUNT(*) FROM classese WHERE class_name = '$className' AND sub_class = '$subClass'";
     $checkClassResult = mysqli_query($connection, $checkClassQuery);
@@ -48,22 +49,26 @@ if (isset($_POST['register'])) {
     if ($teacherCount > 0) {
         if ($classCount > 0) {
             // Class already has a teacher assigned
+            // Class already has a teacher assigned
             echo "<script>
                     alert('This class already has a teacher assigned');
                     window.location.href = 'class_add.php';
                   </script>";
         } else {
             // Assign the teacher to the class
+            // Assign the teacher to the class
             $query = "INSERT INTO classese (class_name, sub_class, teacher_id, date) VALUES ('$className', '$subClass', '$teacherId', '$date')";
             $insert = mysqli_query($connection, $query);
 
             if ($insert) {
+                // Insertion successful
                 // Insertion successful
                 echo "<script>
                         alert('Class registered successfully');
                         window.location.href = 'class_reg.php';
                       </script>";
             } else {
+                // Unable to register class
                 // Unable to register class
                 echo "<script>
                         alert('Unable to register class');
@@ -72,6 +77,7 @@ if (isset($_POST['register'])) {
             }
         }
     } else {
+        // Invalid teacher ID
         // Invalid teacher ID
         echo "<script>
                 alert('Invalid teacher ID');
@@ -95,18 +101,13 @@ if (isset($_POST['register'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD || DASHBOARD</title>
+    <title>Add Class</title>
     <!-- assets -->
     <!-- assets -->
+    <script src="../Assets/tailwind.js"></script>
     <script src="../Assets/chart.min.js"></script>
     <link rel="stylesheet" href="../Assets/fonts/fonts.css">
     <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
-
-    <!-- scripts -->
-    <!-- scripts -->
-    <script src="../Assets/tailwind.js"></script>
-    <script src="../Assets/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="../css//admin.css">
 </head>
 
 <body class=" h-[100vh] bg-gray-300 " style="font-family: poppins;">
@@ -119,12 +120,13 @@ if (isset($_POST['register'])) {
     <div class="-mt-[300px]">
         <!-- side nav -->
         <!-- side nav -->
-        <div class="w-60 h-[100vh] absolute p-6">
+        <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
             <?php include('../nav/nav.php') ?>
         </div>
+
         <!-- page content -->
         <!-- page content -->
-        <div class="ml-[280px]  pt-6 pr-6">
+        <div class="lg:ml-[280px] ml-4  pt-6 pr-6">
             <!-- page title1 -->
             <!-- page title1 -->
             <div class="grid grid-cols-2">
@@ -133,7 +135,8 @@ if (isset($_POST['register'])) {
                         <p class="text-gray-300 text-sm">Pages</p>
                         <p class="text-white text-sm">/Add Class</p>
                     </div>
-                    <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
+                    <p class="text-white text-md mt-2"><i onclick="showMe()"
+                            class="fa fa-bars lg:hidden transform transition-transform rotate-90"></i></p>
                 </div>
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
@@ -163,7 +166,7 @@ if (isset($_POST['register'])) {
                                     Name</label>
                                 <select type="text" id="firstName" name="name"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your name...">
+                                    placeholder="Enter your name..." required>
                                     <option value="">-- select class --</option>
                                     <option value="JHS ONE">JHS ONE</option>
                                     <option value="JHS TWO">JHS TWO</option>
@@ -173,7 +176,7 @@ if (isset($_POST['register'])) {
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Sub Class</label>
                                 <select type="text" id="firstName" name="subClass"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter email...">
+                                    placeholder="Enter email..." required>
                                     <option value="">-- select sub class --</option>
                                     <option value="A">A</option>
                                     <option value="B">B</option>
@@ -182,7 +185,8 @@ if (isset($_POST['register'])) {
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Class Teacher</label>
                                 <input type="text" id="firstName" name="teacherId" placeholder="Enter teacher id..."
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"><br><br>
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                    required><br><br>
 
 
                             </div>
@@ -205,9 +209,16 @@ if (isset($_POST['register'])) {
 
 
     <!-- confirm before delete -->
+    <!-- confirm before delete -->
     <script>
     function confirmLogout() {
         return confirm("Are you sure you want to logout?");
+    }
+
+    function showMe() {
+        var nav = document.getElementById('nav');
+        nav.classList.toggle('hidden');
+        nav.classList.toggle('block ');
     }
     </script>
     <script>

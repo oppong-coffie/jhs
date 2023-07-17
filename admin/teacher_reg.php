@@ -2,9 +2,11 @@
 session_start();
 
 // Database connection
+// Database connection
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
 
+//deleting records
 //deleting records
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
@@ -20,18 +22,23 @@ if (isset($_GET['delete'])) {
 
 
 // Number of records per page
+// Number of records per page
 $recordsPerPage = 8;
 
+// Get the current page number from the URL parameter
 // Get the current page number from the URL parameter
 $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
 
 // Calculate the offset for the query
+// Calculate the offset for the query
 $offset = ($currentpage - 1) * $recordsPerPage;
 
+// Query to retrieve the records for the current page
 // Query to retrieve the records for the current page
 $query = "SELECT * FROM `teachers` LIMIT $offset, $recordsPerPage";
 $teacher_details = mysqli_query($connection, $query);
 
+// Query to get the total count of records
 // Query to get the total count of records
 $totalRecordsQuery = "SELECT COUNT(*) AS total FROM `teachers`";
 $totalRecordsResult = mysqli_query($connection, $totalRecordsQuery);
@@ -49,27 +56,28 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADMIN DASHBOARD || DASHBOARD</title>
     <!-- assets -->
+    <!-- scripts -->
+    <script src="../Assets/tailwind.js"></script>
     <script src="../Assets/chart.min.js"></script>
     <link rel="stylesheet" href="../Assets/fonts/fonts.css">
     <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
 
-    <!-- scripts -->
-    <script src="../Assets/tailwind.js"></script>
-    <script src="../Assets/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="../css/admin.css">
 </head>
 
 <body class="h-[100vh] bg-gray-300" style="font-family: poppins;">
     <!-- blue background -->
-    <div class="h-[300px] bg-[#736FF8]"></div>
+    <!-- blue background -->
+    <div class="h-[300px]  w-[1100px] lg:w-[1366px] bg-[#736FF8]"></div>
 
     <div class="-mt-[300px]">
+       <!-- side nav -->
         <!-- side nav -->
-        <div class="w-60 h-[100vh] absolute p-6">
+        <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
             <?php include('../nav/nav.php') ?>
         </div>
         <!-- page content -->
-        <div class="ml-[280px]  pt-6 pr-6">
+       <!-- page content -->
+       <div class="lg:ml-[280px] ml-4  pt-6 pr-6">
             <!-- page title1 -->
             <div class="grid grid-cols-2">
                 <div>
@@ -77,7 +85,8 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                         <p class="text-gray-300 text-sm">Pages</p>
                         <p class="text-white text-sm">/Manage Teachers</p>
                     </div>
-                    <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
+                    <p class="text-white text-md mt-2"><i onclick="showMe()"
+                            class="fa fa-bars lg:hidden transform transition-transform rotate-90"></i></p>
                 </div>
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
@@ -164,10 +173,15 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
         </div>
     </div>
 
-    <!-- confirm before delete -->
     <script>
-    function confirmDelete() {
-        return confirm("Are you sure you want to delete this record?");
+    function confirmLogout() {
+        return confirm("Are you sure you want to logout?");
+    }
+
+    function showMe() {
+        var nav = document.getElementById('nav');
+        nav.classList.toggle('hidden');
+        nav.classList.toggle('block ');
     }
     </script>
 </body>

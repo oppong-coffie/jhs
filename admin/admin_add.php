@@ -6,9 +6,11 @@ if(!isset($_SESSION['email'])){
 }
 
 //database connection
+//database connection
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
 
+//checking if user is logged in
 //checking if user is logged in
 if (isset($_POST['logout'])) {
     //unset all the session
@@ -39,7 +41,8 @@ if (isset($_POST["register"])) {
     $img_path = "../images/" . $image;
     $date = date("Y-m-d");
 
-    // Now let's move the uploaded image into the folder: image
+    // move the uploaded image into the folder: image
+    //  move the uploaded image into the folder: image
     if (move_uploaded_file($img_temp_name, $img_path)) {
         // Inserting data into the database
         $insert_query = mysqli_query($connection, "INSERT INTO `admin` (`adminId`, `name`, `images`, `email`, `birthDate`, `phoneNo`, `gender`, `role`,`password`,`date`) VALUES ('$id', '$name', '$image', '$email', '$dob', '$phone', '$gender', '$role','$password','$date')");
@@ -72,18 +75,15 @@ if (isset($_POST["register"])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD || DASHBOARD</title>
+    <title>ADD ADMIN</title>
     <!-- assets -->
-    <!-- assets -->
+    <!-- assets -->    
+    <script src="../Assets/tailwind.js"></script>
     <script src="../Assets/chart.min.js"></script>
     <link rel="stylesheet" href="../Assets/fonts/fonts.css">
     <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
 
-    <!-- scripts -->
-    <!-- scripts -->
-    <script src="../Assets/tailwind.js"></script>
-    <script src="../Assets/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="../css//admin.css">
+  
 </head>
 
 <body class=" h-[100vh] bg-gray-300 " style="font-family: poppins;">
@@ -95,13 +95,13 @@ if (isset($_POST["register"])) {
 
     <div class="-mt-[300px]">
         <!-- side nav -->
-        <!-- side nav -->
-        <div class="w-60 h-[100vh] absolute p-6">
+       <!-- side nav -->
+       <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
             <?php include('../nav/nav.php') ?>
         </div>
         <!-- page content -->
         <!-- page content -->
-        <div class="ml-[280px]  pt-6 pr-6">
+        <div class="lg:ml-[280px] ml-4  pt-6 pr-6">
             <!-- page title1 -->
             <!-- page title1 -->
             <div class="grid grid-cols-2">
@@ -110,8 +110,8 @@ if (isset($_POST["register"])) {
                         <p class="text-gray-300 text-sm">Pages</p>
                         <p class="text-white text-sm">/Add Admin</p>
                     </div>
-                    <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
-                </div>
+                    <p class="text-white text-md mt-2"><i onclick="showMe()"
+                            class="fa fa-bars lg:hidden transform transition-transform rotate-90"></i></p>                </div>
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
                     <i class="fa-sharp fa-solid fa-sun "></i>
@@ -136,6 +136,7 @@ if (isset($_POST["register"])) {
                     <div class="w-1/3 flex items-center">
                         <div class="h-4 w-4 rounded-full bg-gray-300"></div>
                         <div class="flex-1 h-0.5 bg-gray-300"></div>
+                        <div class="h-4 w-4 rounded-full bg-blue-500"></div>
                     </div>
                 </div>
             </div>
@@ -151,17 +152,17 @@ if (isset($_POST["register"])) {
                                     Name</label>
                                 <input type="text" id="firstName" name="name"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your name..."><br><br>
+                                    placeholder="Enter your name..." required><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Email</label>
                                 <input type="text" id="firstName" name="email"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter email..."><br><br>
+                                    placeholder="Enter email..." required><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Gender</label>
                                 <select type="text" id="firstName" name="gender"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
+                                    placeholder="Enter your first name" required>
                                     <option value="">-- select gender --</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -182,17 +183,17 @@ if (isset($_POST["register"])) {
                                 <label class=" text-gray-700  mb-2 text-sm" for="phone">Phone</label>
                                 <input type="text" id="firstName" name="phone"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter phone..."><br><br>
+                                    placeholder="Enter phone..." required><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Password</label>
                                 <input type="text" id="firstName" name="password"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter password..."><br><br>
+                                    placeholder="Enter password..." required><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Admin Id</label>
                                 <input type="text" id="firstName" name="id"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter admin id..."><br><br>
+                                    placeholder="Enter admin id..." required><br><br>
                             </div>
                             <div>
                                 <button type="button"
@@ -211,7 +212,7 @@ if (isset($_POST["register"])) {
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Role</label>
                                 <select type="text" id="firstName" name="role"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
+                                    placeholder="Enter your first name" required>
                                     <option value="">-- select role --</option>
                                     <option value="Admin">Admin</option>
                                 </select><br><br>
@@ -219,12 +220,12 @@ if (isset($_POST["register"])) {
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Image</label>
                                 <input type="file" id="firstName" name="image"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name"><br><br>
+                                    placeholder="Enter your first name" required><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Date of Birth</label>
                                 <input type="date" id="firstName" name="dob"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name"><br><br>
+                                    placeholder="Enter your first name" required><br><br>
                             </div>
                             <div>
                                 <button type="button"
@@ -243,9 +244,16 @@ if (isset($_POST["register"])) {
 
 
     <!-- confirm before delete -->
-    <script>
+    <!-- confirm before delete -->
+   <script>
     function confirmLogout() {
         return confirm("Are you sure you want to logout?");
+    }
+
+    function showMe() {
+        var nav = document.getElementById('nav');
+        nav.classList.toggle('hidden');
+        nav.classList.toggle('block ');
     }
     </script>
     <script>

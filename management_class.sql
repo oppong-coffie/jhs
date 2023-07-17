@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2023 at 06:02 PM
+-- Generation Time: Jul 17, 2023 at 09:10 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -69,17 +69,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`Id`, `images`, `adminId`, `name`, `email`, `birthDate`, `phoneNo`, `gender`, `role`, `password`, `date`) VALUES
-(1, 'gyan.jpg', 'gyan123', 'Mends Gyan', 'gyan@gmail.com', '2023-07-21', 548348485, 'Male', 'Admin', '*9BDBC07A9', '2023-07-11'),
-(2, 'IMG_20200424_102915.jpg', 'bcict20099', 'Emman', 'emma@gmail.com', '2023-07-28', 54, 'Male', 'Admin', 'emma', '2023-07-11'),
-(3, 'gyan.jpg', 'bcict20010', 'Paa Kwasi', 'pkay@gmail.com', '2023-07-28', 548348485, 'Male', 'Admin', 'pkay123', '2023-07-11'),
-(4, 'gyan.jpg', 'bcict20098', 'Mends Gyan', 'admin@gmail.com', '2023-07-27', 548348485, 'Male', 'Admin', 'gyan', '2023-07-11'),
-(5, 'gyan.jpg', 'bcict20098', 'Mends Gyan', 'admin@gmail.com', '2023-07-28', 548348485, 'Male', 'Admin', 'admin', '2023-07-11'),
-(6, 'gyan.jpg', 'bcict20098', 'Mends Gyan', 'admin@gmail.com', '2023-07-28', 548348485, 'Male', 'Admin', 'gyan', '2023-07-11'),
-(7, 'gyan.jpg', 'bcict20098', 'Mends Gyan', 'admin@gmail.com', '2023-07-27', 548348485, 'Male', 'Admin', 'admin', '2023-07-11'),
-(8, 'gyan.jpg', 'bcict20099', 'Mends Gyan', 'admin@mail.com', '2023-07-21', 548348485, 'Male', 'Admin', 'admin', '2023-07-11'),
-(9, 'gyan.jpg', 'bcict20098', 'Mends Gyan', 'admin@mail.com', '2023-07-20', 548348485, 'Male', 'Admin', 'admin', '2023-07-11'),
-(10, 'gyan.jpg', 'bcict20098', 'Mends Gyan', 'admin@mail.com', '2023-07-27', 548348485, 'Male', '', 'admin', '2023-07-11'),
-(11, 'gyan.jpg', 'bcict20098', 'Mends Gyan', 'admin@mail.com', '2023-07-20', 548348485, 'Male', 'Admin', 'admin123', '2023-07-11');
+(1, 'gyan.jpg', 'admin1001', 'Mends Gyan', 'admin@gmail.com', '2001-01-30', 548348485, 'Male', 'Admin', 'admin', '2023-07-15');
 
 -- --------------------------------------------------------
 
@@ -102,7 +92,8 @@ CREATE TABLE `classese` (
 INSERT INTO `classese` (`id`, `class_name`, `sub_class`, `teacher_id`, `date`) VALUES
 (10, 'JHS ONE', 'C', 1, '2023-07-14'),
 (11, 'JHS TWO', 'A', 1, '2023-07-14'),
-(12, 'JHS THREE', 'B', 1, '2023-07-14');
+(12, 'JHS THREE', 'B', 1, '2023-07-14'),
+(13, 'JHS ONE', 'A', 1, '2023-07-15');
 
 -- --------------------------------------------------------
 
@@ -127,7 +118,8 @@ INSERT INTO `courses` (`id`, `course`, `date`) VALUES
 (4, 'French', '2023-07-12'),
 (5, 'Science', '2023-07-12'),
 (6, 'Pre-Technical Skills', '2023-07-12'),
-(7, 'Religious and Moral Education', '2023-07-12');
+(7, 'Religious and Moral Education', '2023-07-12'),
+(8, '', '2023-07-15');
 
 -- --------------------------------------------------------
 
@@ -498,19 +490,19 @@ ALTER TABLE `accademicyear`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `classese`
 --
 ALTER TABLE `classese`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `parents`

@@ -1,53 +1,14 @@
+<div id="content" class="bg-gray-100">
 <?php
 session_start();
 
-if(!isset($_SESSION['email'])){
-
-}
-
-//database connection
-$connection = mysqli_connect('localhost', 'root', '', 'management_class');
+//including the database connection
+//including the database connection
+include("../db_connection/db_connection.php")
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <style>
-    .active {
-        background-color: #e9e3ff;
-        height: 30px;
-        border-radius: 5px;
-        padding-left: 4px;
-        padding-top: 2px;
-    }
 
-    ;
-
-    .current-day .day-wrapper {
-        background-color: #FF0000;
-        /* Replace with your desired background color */
-        /* Add any other desired styles */
-    }
-    </style>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD || DASHBOARD</title>
-    <!-- assets -->
-    <!-- assets -->
-    <script src="../Assets/chart.min.js"></script>
-    <link rel="stylesheet" href="../Assets/fonts/fonts.css">
-    <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
-
-    <!-- scripts -->
-    <!-- scripts -->
-    <script src="../Assets/tailwind.js"></script>
-    <script src="../Assets/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="../css//admin.css">
-</head>
-
-<body class=" h-[100vh] bg-gray-300 " style="font-family: poppins;">
     <!-- blue background -->
     <!-- blue background -->
     <div class="h-[300px] bg-[#736FF8]">
@@ -55,14 +16,9 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
     </div>
 
     <div class="-mt-[300px]">
-        <!-- side nav -->
-        <!-- side nav -->
-        <div class="w-60 h-[100vh] absolute p-6">
-            <?php include('../nav/nav.php') ?>
-        </div>
         <!-- page content -->
         <!-- page content -->
-        <div class="ml-[280px]  pt-6 pr-6">
+        <div  class="lg:ml-[280px] ml-4  pt-6 pr-6">
             <!-- page title1 -->
             <!-- page title1 -->
             <div class="grid grid-cols-2">
@@ -71,20 +27,46 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
                         <p class="text-gray-300 text-sm">Pages</p>
                         <p class="text-white text-sm">/Dashboard</p>
                     </div>
-                    <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
+                    <p class="text-white text-md mt-2"><i onclick="showMe()"
+                            class="fa fa-bars lg:hidden transform transition-transform rotate-90"></i></p>
                 </div>
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
                     <i class="fa-sharp fa-solid fa-sun "></i>
+                    <!--profile -->
+                    <!--profile -->
+                    <a href="edit_profile.php">
+                        <div class="">
+                            <?php
+                                // Select query
+                                $select_query = mysqli_query($connection, "SELECT images FROM admin WHERE email = '{$_SESSION['email']}'");
+
+                                // Check if the select query was successful
+                                if ($select_query) {
+                                    // Fetch the result as an associative array
+                                    $admin_image = mysqli_fetch_assoc($select_query);
+
+                                    // Access the image column
+                                    $admin_image = $admin_image['images'];
+
+                                    // Output the image
+                                    echo "<img src='../images/$admin_image' alt='admin image' class=' h-[25px] w-[25px] rounded-full'>";
+                                } else {
+                                    // Query execution failed
+                                    echo "Error: " . mysqli_error($connection);
+                                }
+                                ?>
+                        </div>
+                    </a>
                 </div>
             </div>
 
             <!-- page title2 -->
             <!-- page title2 -->
-            <div class="grid grid-cols-4 mt-6">
+            <div class="lg:grid lg:grid-cols-4 mt-6">
                 <!-- total students -->
-
-                <div class=" grid grid-cols-2 h-[150px] w-60 bg-white rounded-lg shadow-sm p-4">
+                <!-- total students -->
+                <div class=" grid grid-cols-2 h-[150px] lg:w-60 bg-white  rounded-lg shadow-sm  p-4">
                     <div>
                         <p class="text-lg text-gray-600">Student</p>
                         <p class="text-[30px] mt-4">
@@ -128,8 +110,8 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
                 </div>
 
                 <!-- total subjects -->
-
-                <div class="grid grid-cols-2 h-[150px] w-60 bg-white rounded-lg shadow-sm p-4">
+                <!-- total subjects -->
+                <div class="grid grid-cols-2 h-[150px] mt-6 lg:mt-0 lg:w-60 bg-white rounded-lg shadow-sm p-4">
                     <div>
                         <p class="text-lg text-gray-600">Subjects</p>
                         <p class="text-[30px] mt-4">
@@ -174,7 +156,7 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
                 <!-- total teachers -->
                 <!-- total teachers -->
-                <div class="grid grid-cols-2 h-[150px] w-60 bg-white rounded-lg shadow-sm p-4">
+                <div class="grid grid-cols-2 h-[150px]  mt-6 lg:mt-0 lg:w-60 bg-white rounded-lg shadow-sm p-4">
                     <div>
                         <p class="text-lg text-gray-600">Teachers</p>
                         <p class="text-[30px] mt-4">
@@ -218,7 +200,7 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
                 <!-- total parents -->
                 <!-- total parents -->
-                <div class=" grid grid-cols-2 h-[150px] w-60 bg-white rounded-lg shadow-sm p-4">
+                <div class=" grid grid-cols-2 h-[150px]  mt-6 lg:mt-0 lg:w-60 bg-white rounded-lg shadow-sm p-4">
                     <div>
                         <p class="text-lg">Parents</p>
                         <p class="text-[30px] mt-4">
@@ -262,108 +244,20 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
             <!-- page title3 -->
             <!-- page title3 -->
-            <div class="grid grid-cols-3 mt-8">
-                <div class="col-span-2 h-80 w-[650px] bg-white rounded-lg">
+            <div class="lg:grid lg:grid-cols-3 mt-8">
+                <div class="lg:col-span-2 h-80 lg:w-[770px] bg-white rounded-lg">
                     <canvas id="graphCanvas" width="650" height="300"></canvas>
-                </div>
-                <!--profile -->
-                <!--profile -->
-                <div class="h-80 w-[330px] bg-white rounded-lg p-4  ">
-                    <div class="grid grid-cols-3">
-                        <div class="h-[40px] w-[40px] bg-gray-400 rounded-full flex items-center justify-center">
-                            <a href="">
-                                <p class="text-gray-200 text-md"><i class="fa fa-eye"></i></p>
-                            </a>
-                        </div>
-                        <p class="text-gray-600 text-md">Profile</p>
-
-                        <div class="ml-auto h-[40px] w-[40px] bg-gray-400 rounded-full flex items-center justify-center">
-                            <a href="edit_profile.php">
-                                <p class="text-gray-200 text-md"><i class="fa fa-user-pen"></i></p>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="flex mt-4 justify-center">
-                        <div>
-                            <div class="mt-4 h-[100px] w-[100px] rounded-lg">
-                            <?php
-                                // Select query
-                                $select_query = mysqli_query($connection, "SELECT images FROM admin WHERE email = '{$_SESSION['email']}'");
-
-                                // Check if the select query was successful
-                                if ($select_query) {
-                                    // Fetch the result as an associative array
-                                    $admin_image = mysqli_fetch_assoc($select_query);
-
-                                    // Access the image column
-                                    $admin_image = $admin_image['images'];
-
-                                    // Output the image
-                                    echo "<img src='../images/$admin_image' alt='admin image' class=' h-[100px] w-[100px] rounded-lg'>";
-                                } else {
-                                    // Query execution failed
-                                    echo "Error: " . mysqli_error($connection);
-                                }
-                            ?>
-
-                            </div>
-
-                            <div class="">
-                                <p class="text-gray-600 text-md mt-2">
-                                <?php
-                                // Select query
-                                $select_query = mysqli_query($connection, "SELECT name FROM admin WHERE email = '{$_SESSION['email']}'");
-
-                                // Check if the select query was successful
-                                if ($select_query) {
-                                    // Fetch the result as an associative array
-                                    $name = mysqli_fetch_assoc($select_query);
-
-                                    // Access the image column
-                                    $name = $name['name'];
-
-                                    // Output the image
-                                    echo $name;
-                                } else {
-                                    // Query execution failed
-                                    echo "Error: " . mysqli_error($connection);
-                                }
-                            ?>
-                                </p>
-                                <p class="text-gray-600 text-md mt-2">
-                                <?php
-                                // Select query
-                                $select_query = mysqli_query($connection, "SELECT role FROM admin WHERE email = '{$_SESSION['email']}'");
-
-                                // Check if the select query was successful
-                                if ($select_query) {
-                                    // Fetch the result as an associative array
-                                    $role = mysqli_fetch_assoc($select_query);
-
-                                    // Access the image column
-                                    $role = $role['role'];
-
-                                    // Output the image
-                                    echo $role;
-                                } else {
-                                    // Query execution failed
-                                    echo "Error: " . mysqli_error($connection);
-                                }
-                            ?>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <!-- page title4 -->
             <!-- page title4 -->
-            <div class="flex justify-center gap-40 mt-16">
-                <p class="">All right reserved 2023</p>
-                <p>Powered by: The Group</p>
-                <p>info@school.com</p>
+            <!--footer -->
+            <!--footer -->
+            <div class=" pb-8 lg:pb-0 lg:flex justify-center gap-40 mt-16">
+                <p class="">All right reserved || 2023</p>
+                <p class=" mt-2 lg:mt-0">Powered by: The Group</p>
+                <p class=" mt-2 lg:mt-0">info@school.com</p>
             </div>
         </div>
     </div>
@@ -374,6 +268,12 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
     <script>
     function confirmLogout() {
         return confirm("Are you sure you want to logout?");
+    }
+
+    function showMe() {
+        var nav = document.getElementById('nav');
+        nav.classList.toggle('hidden');
+        nav.classList.toggle('block ');
     }
     </script>
     <script>
@@ -408,9 +308,7 @@ $connection = mysqli_connect('localhost', 'root', '', 'management_class');
     });
     </script>
 
-</body>
 
-</html>
 <?php
 //checking if user is logged in
 if (isset($_POST['logout'])) {
@@ -428,3 +326,4 @@ if (isset($_POST['logout'])) {
     ";
 }
 ?>
+</div>

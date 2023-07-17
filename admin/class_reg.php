@@ -2,70 +2,10 @@
 session_start();
 
 // Database connection
+// Database connection
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
-if (isset($_POST['submit'])) {
-    $course = $_POST['course'];
-    $teacherId = $_POST['teacherId'];
-    $date = date('Y-m-d');
 
-    // Check if the teacher exists in the teachers table
-    $checkQuery = "SELECT COUNT(*) FROM teachers WHERE id = ?";
-    $checkStatement = mysqli_prepare($connection, $checkQuery);
-    mysqli_stmt_bind_param($checkStatement, "i", $teacherId);
-    mysqli_stmt_execute($checkStatement);
-    mysqli_stmt_store_result($checkStatement);  // Store the result set
-    mysqli_stmt_bind_result($checkStatement, $count);
-    mysqli_stmt_fetch($checkStatement);
-
-    if ($count > 0) {
-        // Check if the course exists in the courses table
-        $checkQuery = "SELECT COUNT(*) FROM courses WHERE id = ?";
-        $checkStatement = mysqli_prepare($connection, $checkQuery);
-        mysqli_stmt_bind_param($checkStatement, "i", $course);
-        mysqli_stmt_execute($checkStatement);
-        mysqli_stmt_store_result($checkStatement);  // Store the result set
-        mysqli_stmt_bind_result($checkStatement, $count);
-        mysqli_stmt_fetch($checkStatement);
-
-        if ($count > 0) {
-            // Both teacher and course exist, proceed with the insert
-            $query = "INSERT INTO teacherCourse (teachers_id, subject_id, date) VALUES (?, ?, ?)";
-            $statement = mysqli_prepare($connection, $query);
-            mysqli_stmt_bind_param($statement, "iis", $teacherId, $course, $date);
-            $insert = mysqli_stmt_execute($statement);
-
-            if ($insert) {
-                // Registration successful
-                echo "<script>
-                        alert('Registration Successful');
-                        window.location.href = 'subjects.php';
-                    </script>";
-            } else {
-                // Unable to register course
-                echo "<script>
-                        alert('Unable to register course');
-                        window.location.href = 'subjects.php';
-                    </script>";
-            }
-        } else {
-            // Invalid course ID
-            echo "<script>
-                    alert('Invalid course ID');
-                    window.location.href = 'subjects.php';
-                </script>";
-        }
-    } else {
-        // Invalid teacher ID
-        echo "<script>
-                alert('Invalid teacher ID');
-                window.location.href = 'subjects.php';
-            </script>";
-    }
-}
-
-
-
-
+//deleting records
 //deleting records
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
@@ -81,18 +21,23 @@ if (isset($_GET['delete'])) {
 
 
 // Number of records per page
+// Number of records per page
 $recordsPerPage = 10;
 
+// Get the current page number from the URL parameter
 // Get the current page number from the URL parameter
 $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
 
 // Calculate the offset for the query
+// Calculate the offset for the query
 $offset = ($currentpage - 1) * $recordsPerPage;
 
+// Query to retrieve the records for the current page
 // Query to retrieve the records for the current page
 $query = "SELECT * FROM `classese` LIMIT $offset, $recordsPerPage";
 $teacher_details = mysqli_query($connection, $query);
 
+// Query to get the total count of records
 // Query to get the total count of records
 $totalRecordsQuery = "SELECT COUNT(*) AS total FROM `classese`";
 $totalRecordsResult = mysqli_query($connection, $totalRecordsQuery);
@@ -108,29 +53,31 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD || DASHBOARD</title>
+    <title>Class Management</title>
     <!-- assets -->
+    <!-- scripts -->
+    <script src="../Assets/tailwind.js"></script>
     <script src="../Assets/chart.min.js"></script>
     <link rel="stylesheet" href="../Assets/fonts/fonts.css">
     <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
 
-    <!-- scripts -->
-    <script src="../Assets/tailwind.js"></script>
-    <script src="../Assets/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="../css/admin.css">
 </head>
 
 <body class="h-[100vh] bg-gray-300" style="font-family: poppins;">
+     <!-- blue background -->
     <!-- blue background -->
-    <div class="h-[300px] bg-[#736FF8]"></div>
+    <div class="h-[300px]  w-[1100px] lg:w-[1366px] bg-[#736FF8]"></div>
 
     <div class="-mt-[300px]">
+       <!-- side nav -->
         <!-- side nav -->
-        <div class="w-60 h-[100vh] absolute p-6">
+        <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
             <?php include('../nav/nav.php') ?>
         </div>
+
         <!-- page content -->
-        <div class="ml-[280px]  pt-6 pr-6">
+       <!-- page content -->
+        <div class="lg:ml-[280px] ml-4  pt-6 pr-6">
             <!-- page title1 -->
             <div class="grid grid-cols-2">
                 <div>
@@ -138,7 +85,8 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                         <p class="text-gray-300 text-sm">Pages</p>
                         <p class="text-white text-sm">/Manage Classes</p>
                     </div>
-                    <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
+                    <p class="text-white text-md mt-2"><i onclick="showMe()"
+                            class="fa fa-bars lg:hidden transform transition-transform rotate-90"></i></p>
                 </div>
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
@@ -226,9 +174,16 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
     </div>
 
     <!-- confirm before delete -->
+    <!-- confirm before delete -->
     <script>
-    function confirmDelete() {
-        return confirm("Are you sure you want to delete this record?");
+    function confirmLogout() {
+        return confirm("Are you sure you want to logout?");
+    }
+
+    function showMe() {
+        var nav = document.getElementById('nav');
+        nav.classList.toggle('hidden');
+        nav.classList.toggle('block ');
     }
     </script>
 </body>

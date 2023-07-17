@@ -62,7 +62,7 @@ $course = $teacherow['course'];
                     <li class="list-none active">
                         <i class="fa-regular fa-house text-gray-500 "></i><a class="ml-2 text-gray-500" href="admin.php">Dashboard</a>
                     </li>
-                    <li class="list-none mt-4">
+                    <li class="list-none mt-4"> 
                         <i class="fa-regular fa-briefcase text-gray-500"></i><a class="ml-2 text-gray-500" href="">Courses</a>
                     </li>
                     <li class="list-none mt-4">
