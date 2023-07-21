@@ -29,7 +29,6 @@ if (isset($_POST['register'])) {
     //fetchingg data from the form
     //fetchingg data from the form
     $className = $_POST['name'];
-    $subClass = $_POST['subClass'];
     $teacherId = $_POST['teacherId'];
     $date = date("Y-m-d");
 
@@ -42,7 +41,7 @@ if (isset($_POST['register'])) {
 
     // Check if the class already has a teacher assigned
     // Check if the class already has a teacher assigned
-    $checkClassQuery = "SELECT COUNT(*) FROM classese WHERE class_name = '$className' AND sub_class = '$subClass'";
+    $checkClassQuery = "SELECT COUNT(*) FROM classese WHERE class_name = '$className' ";
     $checkClassResult = mysqli_query($connection, $checkClassQuery);
     $classCount = mysqli_fetch_array($checkClassResult)[0];
 
@@ -57,7 +56,7 @@ if (isset($_POST['register'])) {
         } else {
             // Assign the teacher to the class
             // Assign the teacher to the class
-            $query = "INSERT INTO classese (class_name, sub_class, teacher_id, date) VALUES ('$className', '$subClass', '$teacherId', '$date')";
+            $query = "INSERT INTO classese (class_name, teacher_id, date) VALUES ('$className',  '$teacherId', '$date')";
             $insert = mysqli_query($connection, $query);
 
             if ($insert) {
@@ -156,7 +155,7 @@ if (isset($_POST['register'])) {
             </div>
 
             <div class="flex items-center mb-8 flex justify-center mt-10">
-                <div class="h-[360px] w-[600px] bg-white rounded-lg p-6">
+                <div class="h-[300px] w-[600px] bg-white rounded-lg p-6">
                     <form id="multiStepForm" method="post" action="" enctype="multipart/form-data">
                         <!-- first form -->
                         <!-- first form -->
@@ -168,20 +167,18 @@ if (isset($_POST['register'])) {
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter your name..." required>
                                     <option value="">-- select class --</option>
-                                    <option value="JHS ONE">JHS ONE</option>
-                                    <option value="JHS TWO">JHS TWO</option>
-                                    <option value="JHS THREE">JHS THREE</option>
+                                    <option value="JHS ONE A">JHS ONE A</option>
+                                    <option value="JHS ONE B">JHS ONE B</option>
+                                    <option value="JHS ONE C">JHS ONE C</option>
+                                    <option value="JHS TWO A">JHS TWO A</option>
+                                    <option value="JHS TWO B">JHS TWO B</option>
+                                    <option value="JHS TWO C">JHS TWO C</option>
+                                    <option value="JHS THREE A">JHS THREE A</option>
+                                    <option value="JHS THREE B">JHS THREE B</option>
+                                    <option value="JHS THREE C">JHS THREE C</option>
                                 </select><br><br>
 
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Sub Class</label>
-                                <select type="text" id="firstName" name="subClass"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter email..." required>
-                                    <option value="">-- select sub class --</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                </select><br><br>
+                               
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Class Teacher</label>
                                 <input type="text" id="firstName" name="teacherId" placeholder="Enter teacher id..."

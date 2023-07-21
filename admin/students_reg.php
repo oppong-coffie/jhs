@@ -41,33 +41,34 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD || DASHBOARD</title>
+    <title>My Website</title>
     <!-- assets -->
+    <!-- scripts -->
+    <script src="../Assets/tailwind.js"></script>
     <script src="../Assets/chart.min.js"></script>
     <link rel="stylesheet" href="../Assets/fonts/fonts.css">
     <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
-
-    <!-- scripts -->
-    <script src="../Assets/tailwind.js"></script>
     <script src="../Assets/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="../css/admin.css">
+
+
 </head>
 
-<body class="h-[100vh] bg-gray-300" style="font-family: poppins;">
+<body style="font-family: poppins;" class="bg-gray-300">
+
     <!-- blue background -->
     <div class="h-[300px] bg-[#736FF8]"></div>
 
     <div class="-mt-[300px]">
+
         <!-- side nav -->
-        <div class="w-60 h-[100vh] absolute p-6">
+        <!-- side nav -->
+        <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
             <?php include('../nav/nav.php') ?>
         </div>
+
         <!-- page content -->
         <div class="ml-[280px]  pt-6 pr-6">
             <!-- page title1 -->
@@ -75,7 +76,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 <div>
                     <div class="flex">
                         <p class="text-gray-300 text-sm">Pages</p>
-                        <p class="text-white text-sm">/Manage Teachers</p>
+                        <p class="text-white text-sm">/Manage Students</p>
                     </div>
                     <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
                 </div>
@@ -148,7 +149,8 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 <div class="pagination mt-4 gap-10">
                     <?php if ($totalPages > 1) { ?>
                     <?php if ($currentpage > 1) { ?>
-                    <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
+                    <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button
+                            class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
                     <?php } ?>
                     <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
                     <a href="?page=<?php echo $i; ?>"
@@ -170,6 +172,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
         return confirm("Are you sure you want to delete this record?");
     }
     </script>
+
 </body>
 
 </html>

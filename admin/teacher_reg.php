@@ -1,3 +1,5 @@
+
+
 <?php
 session_start();
 
@@ -48,33 +50,35 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD || DASHBOARD</title>
+    <title>My Website</title>
     <!-- assets -->
     <!-- scripts -->
     <script src="../Assets/tailwind.js"></script>
     <script src="../Assets/chart.min.js"></script>
     <link rel="stylesheet" href="../Assets/fonts/fonts.css">
     <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
+    <script src="../Assets/jquery-3.6.0.min.js"></script>
+
 
 </head>
 
-<body class="h-[100vh] bg-gray-300" style="font-family: poppins;">
+<body style="font-family: poppins;" class="bg-gray-300">
+
     <!-- blue background -->
     <!-- blue background -->
     <div class="h-[300px]  w-[1100px] lg:w-[1366px] bg-[#736FF8]"></div>
 
     <div class="-mt-[300px]">
+
+    <!-- side nav -->
        <!-- side nav -->
-        <!-- side nav -->
-        <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
+       <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
             <?php include('../nav/nav.php') ?>
         </div>
+       
         <!-- page content -->
        <!-- page content -->
        <div class="lg:ml-[280px] ml-4  pt-6 pr-6">
@@ -184,6 +188,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
         nav.classList.toggle('block ');
     }
     </script>
+
 </body>
 
 </html>

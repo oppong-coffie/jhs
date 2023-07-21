@@ -11,14 +11,10 @@ if (!isset($_SESSION['email'])) {
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
 // Retrieve parent ID based on email session
-$email = $_SESSION['email'];
-$query = "SELECT id FROM parents WHERE email = '$email'";
-$result = mysqli_query($connection, $query);
-$row = mysqli_fetch_assoc($result);
-$parentId = $row['id'];
+$parentId = $_SESSION['id'];
 
 // Retrieve student ID associated with the parent
-$studentQuery = "SELECT id FROM student WHERE parent_id = $parentId";
+$studentQuery = "SELECT id FROM student WHERE parent_id = '$parentId'";
 $studentResult = mysqli_query($connection, $studentQuery);
 $studentRow = mysqli_fetch_assoc($studentResult);
 $studentId = $studentRow['id'];
@@ -112,6 +108,17 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
             </div>
 
             <!-- Student Results - Semester One -->
+            <?php
+                        $class = "JHS ONE A";
+                        $class2 = "JHS ONE B";
+                        $class3 = "JHS ONE C";
+                        $resultQuerySemOne = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'First Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
+                        $resultResultSemOne = mysqli_query($connection, $resultQuerySemOne);
+                        $row = mysqli_fetch_assoc($resultResultSemOne);
+                        
+                        //checking if the student has results
+                        if($row){
+                            ?>
             <div class="bg-white w-[1050px] rounded-lg shadow-sm mt-10 p-6">
                 <h2 class="text-md mb-2 text-gray-600 ">Semester One Results (Class: JSH1)</h2>
                 <table class="table w-[990px] ml-2">
@@ -129,8 +136,10 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </thead>
                     <tbody class="text-[13px] text-gray-600">
                         <?php
-                        $class = "JHS ONE";
-                        $resultQuerySemOne = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'First Semester' AND class = '$class' ";
+                        $class = "JHS ONE A";
+                        $class2 = "JHS ONE B";
+                        $class3 = "JHS ONE C";
+                        $resultQuerySemOne = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'First Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
                         $resultResultSemOne = mysqli_query($connection, $resultQuerySemOne);
 
                         while ($row = mysqli_fetch_assoc($resultResultSemOne)) {
@@ -153,8 +162,22 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </tbody>
                 </table>
             </div>
+            <?php
+                }
+            ?>
+
+
 
             <!-- Student Results - Semester Two -->
+            <?php
+                        $class = "JHS ONE A";
+                        $class2 = "JHS ONE B";
+                        $class3 = "JHS ONE C";
+                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'Second Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
+                        $resultResultSemTwo = mysqli_query($connection, $resultQuerySemTwo);
+                        $row = mysqli_fetch_assoc($resultResultSemTwo);
+                    if($row){
+                        ?>
             <div class="bg-white w-[1050px] rounded-lg shadow-sm mt-10 p-6">
                 <h2 class="text-md mb-2 text-gray-600 ">Semester Two Results (Class: JSH1)</h2>
                 <table class="table w-[990px] ml-2">
@@ -172,8 +195,10 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </thead>
                     <tbody class="text-[13px] text-gray-600">
                         <?php
-                        $class = "JHS ONE";
-                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'Second Semester' AND class = '$class' ";
+                        $class = "JHS ONE A";
+                        $class2 = "JHS ONE B";
+                        $class3 = "JHS ONE C";
+                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'Second Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
                         $resultResultSemTwo = mysqli_query($connection, $resultQuerySemTwo);
                         
 
@@ -197,9 +222,21 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </tbody>
                 </table>
             </div>
+            <?php
+                }
+            ?>
 
 
             <!-- Student Results - Semester Two -->
+            <?php
+                        $class = "JHS TWO A";
+                        $class2 = "JHS TWO B";
+                        $class3 = "JHS TWO C";
+                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'First Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
+                        $resultResultSemTwo = mysqli_query($connection, $resultQuerySemTwo);
+                        $row = mysqli_fetch_assoc($resultResultSemTwo);
+                    if($row){
+                        ?>
             <div class="bg-white w-[1050px] rounded-lg shadow-sm mt-10 p-6">
                 <h2 class="text-md mb-2 text-gray-600 ">Semester One Results (Class: JSH2)</h2>
                 <table class="table w-[990px] ml-2">
@@ -217,8 +254,10 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </thead>
                     <tbody class="text-[13px] text-gray-600">
                         <?php
-                        $class = "JHS TWO";
-                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'First Semester' AND class = '$class' ";
+                        $class = "JHS TWO A";
+                        $class2 = "JHS TWO B";
+                        $class3 = "JHS TWO C";
+                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'First Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
                         $resultResultSemTwo = mysqli_query($connection, $resultQuerySemTwo);
                         
 
@@ -242,8 +281,20 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </tbody>
                 </table>
             </div>
+            <?php
+                }
+            ?>
 
             <!-- Student Results - Semester Two -->
+            <?php
+                        $class = "JHS TWO A";
+                        $class2 = "JHS TWO B";   
+                        $class3 = "JHS TWO C";
+                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'Second Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
+                        $resultResultSemTwo = mysqli_query($connection, $resultQuerySemTwo);
+                        $row = mysqli_fetch_assoc($resultResultSemTwo);
+                    if($row){
+                        ?>
             <div class="bg-white w-[1050px] rounded-lg shadow-sm mt-10 p-6">
                 <h2 class="text-md mb-2 text-gray-600 ">Semester Two Results (Class: JSH2)</h2>
                 <table class="table w-[990px] ml-2">
@@ -261,8 +312,10 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </thead>
                     <tbody class="text-[13px] text-gray-600">
                         <?php
-                        $class = "JHS TWO";
-                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'Second Semester' AND class = '$class' ";
+                        $class = "JHS TWO A";
+                        $class2 = "JHS TWO B";
+                        $class3 = "JHS TWO C";
+                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'Second Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";  
                         $resultResultSemTwo = mysqli_query($connection, $resultQuerySemTwo);
                         
 
@@ -286,8 +339,20 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </tbody>
                 </table>
             </div>
+            <?php
+                }
+            ?>
 
             <!-- Student Results - Semester Two -->
+            <?php
+                        $class = "JHS THREE A";
+                        $class2 = "JHS THREE B";
+                        $class3 = "JHS THREE C";
+                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'First Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
+                        $resultResultSemTwo = mysqli_query($connection, $resultQuerySemTwo);
+                        $row = mysqli_fetch_assoc($resultResultSemTwo);
+                    if($row){
+                        ?>
             <div class="bg-white w-[1050px] rounded-lg shadow-sm mt-10 p-6">
                 <h2 class="text-md mb-2 text-gray-600 ">Semester Two Results (Class: JSH3)</h2>
                 <table class="table w-[990px] ml-2">
@@ -305,8 +370,10 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </thead>
                     <tbody class="text-[13px] text-gray-600">
                         <?php
-                        $class = "JHS THREE";
-                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'First Semester' AND class = '$class' ";
+                        $class = "JHS THREE A";
+                        $class2 = "JHS THREE B";
+                        $class3 = "JHS THREE C";
+                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'First Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
                         $resultResultSemTwo = mysqli_query($connection, $resultQuerySemTwo);
                         
 
@@ -330,9 +397,21 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </tbody>
                 </table>
             </div>
+            <?php
+                }
+            ?>
 
 
             <!-- Student Results - Semester Two -->
+            <?php
+                        $class = "JHS THREE A";
+                        $class2 = "JHS THREE B";
+                        $class3 = "JHS THREE C";
+                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'Second Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
+                        $resultResultSemTwo = mysqli_query($connection, $resultQuerySemTwo);
+                        $row = mysqli_fetch_assoc($resultResultSemTwo);
+                    if($row){
+                        ?>
             <div class="bg-white w-[1050px] rounded-lg shadow-sm mt-10 p-6">
                 <h2 class="text-md mb-2 text-gray-600 ">Semester Two Results (Class: JSH3)</h2>
                 <table class="table w-[990px] ml-2">
@@ -350,8 +429,10 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </thead>
                     <tbody class="text-[13px] text-gray-600">
                         <?php
-                        $class = "JHS THREE";
-                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'Second Semester' AND class = '$class' ";
+                        $class = "JHS THREE A";
+                        $class2 = "JHS THREE B";
+                        $class3 = "JHS THREE C";
+                        $resultQuerySemTwo = "SELECT * FROM results WHERE student_id = $studentId AND semester = 'Second Semester' AND class = '$class' OR class ='$class2' OR class ='$class3' ";
                         $resultResultSemTwo = mysqli_query($connection, $resultQuerySemTwo);
                         
 
@@ -375,6 +456,10 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                     </tbody>
                 </table>
             </div>
+            <?php
+                }
+            ?>
+
         </div>
     </div>
 </body>

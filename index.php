@@ -22,6 +22,7 @@
             $teacherRow = mysqli_fetch_array($teacherQuery);
                 if ($teacherRow) {
                     $_SESSION['email'] = $teacherRow['email'];
+                    $_SESSION['id'] = $teacherRow['id'];
                     $response = [
                         'status' => 200,
                         'message' => 'You have successfully logged in'
@@ -62,7 +63,7 @@
             $adminQuery = mysqli_query($connection, $admin);
                 if ($admin_row = mysqli_fetch_array($adminQuery)) {
                     $_SESSION['email'] =$admin_row['email'];
-                    header("Location:./admin/index.php");
+                    header("Location:./admin/dashboard.php");
                     exit();
                 } else {
                     echo "<script>
@@ -78,6 +79,8 @@
         $parentQuery = mysqli_query($connection, $parent);
         if ($parent_row = mysqli_fetch_array($parentQuery)) {
             $_SESSION['email'] =$parent_row['email'];
+            $_SESSION['id'] =$parent_row['id'];
+
             header("Location:./parents/parent_dashboard.php");
             exit();
         }  else {

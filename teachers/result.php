@@ -28,9 +28,37 @@ $currentpage = isset($_GET['page']) ? $_GET['page'] : 1;
 // Calculate the offset for the query
 $offset = ($currentpage - 1) * $recordsPerPage;
 
-// Query to retrieve the records for the current page
-$query = "SELECT * FROM `results` LIMIT $offset, $recordsPerPage";
-$teacher_details = mysqli_query($connection, $query);
+// Retrieve teacher ID based on email session
+$email = $_SESSION['email'];
+$query = "SELECT id FROM teachers WHERE email = '$email'";
+$result = mysqli_query($connection, $query);
+$row = mysqli_fetch_assoc($result);
+$teacherId = $row['id'];
+
+// Query to retrieve courses for the teacher
+$query = "SELECT * FROM teacherclass WHERE teacher_id = '$teacherId'";
+$courseDetails = mysqli_query($connection, $query);
+$class_row =mysqli_fetch_array($courseDetails );
+$class = $class_row['subject'];
+
+//selecting subject name from courses table using the subject id
+$subject_id = $class_row['subject'];
+$subject_query = "SELECT course FROM courses WHERE id = '$class'";
+$subject_result = mysqli_query($connection, $subject_query);
+$subject_row = mysqli_fetch_array($subject_result);
+$subject = $subject_row['course'];
+
+
+//query to select the results
+$result_select = "SELECT * FROM results WHERE subject = '$subject' LIMIT $offset, $recordsPerPage";
+$result_query = mysqli_query($connection, $result_select);
+
+if (!$result_query) {
+    die('Error: ' . mysqli_error($connection));
+}
+
+
+
 
 // Query to get the total count of records
 $totalRecordsQuery = "SELECT COUNT(*) AS total FROM `results`";
@@ -47,7 +75,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD || DASHBOARD</title>
+    <title>Results</title>
     <!-- assets -->
     <script src="../Assets/chart.min.js"></script>
     <link rel="stylesheet" href="../Assets/fonts/fonts.css">
@@ -82,9 +110,6 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
                     <i class="fa-sharp fa-solid fa-sun "></i>
-                    <a href="results_add.php">
-                        <button class="bg-white h-6  w-12 rounded-sm text-gray-600">Add</button>
-                    </a>
                 </div>
             </div>
 
@@ -97,7 +122,6 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                             <th>YEAR</th>
                             <th>SEMESTER</th>
                             <th>CLASS</th>
-                            <th>SUB CLASS</th>
                             <th>SUBJECT</th>
                             <th>MARKS</th>
                             <th>GRADE</th>
@@ -107,7 +131,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                         </tr>
                     </thead>
                     <?php
-                    while ($row = mysqli_fetch_array($teacher_details)) {
+                    while ($row = mysqli_fetch_assoc($result_query )) {
                         // Grading logic
     $marks = $row["marks"];
     $grade = "";
@@ -150,7 +174,6 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                             <td><?php echo $row["year"] ?></td>
                             <td><?php echo $row["semester"] ?></td>
                             <td><?php echo $row["class"] ?></td>
-                            <td><?php echo $row["sub_class"] ?></td>
                             <td><?php echo $row["subject"] ?></td>
                             <td><?php echo $row["marks"] ?></td>
                             <td><?php echo $grade ?></td>

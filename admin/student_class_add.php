@@ -29,18 +29,11 @@ if (isset($_POST['register'])) {
     $teacherId = $_POST['teacherId'];
     $date = date("Y-m-d");
 
-    // Check if the teacher exists in the teachers table
-    $checkQuery = "SELECT COUNT(*) FROM student WHERE id = $teacherId";
-    $checkResult = mysqli_query($connection, $checkQuery);
-    $teacherCount = mysqli_fetch_array($checkResult)[0];
+   
 
-    if ($teacherCount > 0) {
-        // Check if the class, subclass, and subject combination is already assigned to any teacher
-        $checkAssignmentQuery = "SELECT COUNT(*) FROM studentclass WHERE class_id = $className AND sub_class = '$subClass'";
-        $checkAssignmentResult = mysqli_query($connection, $checkAssignmentQuery);
-        $assignmentCount = mysqli_fetch_array($checkAssignmentResult)[0];
+    
 
-        if ($assignmentCount == 0) {
+  
             // Insert query
             $query = "INSERT INTO studentClass (class_id, student_id, sub_class, date) VALUES ($className, $teacherId, '$subClass',  '$date')";
             $insert = mysqli_query($connection, $query);
@@ -58,24 +51,13 @@ if (isset($_POST['register'])) {
                         window.location.href = 'student_class_add.php';
                       </script>";
             }
-        } else {
-            // Class, subclass, and subject already assigned to a teacher
-            echo "<script>
-                    alert('There is a teacher assigned to teach this class this subject'  );
-                    window.location.href = 'student_class_add.php';
-                  </script>";
-        }
-    } else {
-        // Invalid teacher ID
-        echo "<script>
-                alert('Invalid teacher ID');
-                window.location.href = 'student_class_add.php';
-              </script>";
-    }
-
-    // Close the database connection
+       
+        // Close the database connection
     mysqli_close($connection);
-}
+    } 
+
+    
+
 
 
 

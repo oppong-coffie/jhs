@@ -15,7 +15,7 @@
             <div class="mt-8">
                 <li class="list-none active">
                     <i class="fa-regular fa-house text-gray-500 text-sm"></i><a class="ml-2 text-gray-500 text-sm"
-                        href="dashboard.php">Dashboard</a>
+                        href="teacher_dashboard.php">Dashboard</a>
                 </li>
                 
                 <li class="list-none mt-4">

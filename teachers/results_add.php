@@ -1,61 +1,137 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['email'])){
-
+if (!isset($_SESSION['email'])) {
+    // Handle when the user is not logged in
 }
 
-//database connection
+// Database connection
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
-
-//checking if user is logged in
+// Checking if the user is logged in and handling logout
 if (isset($_POST['logout'])) {
-    //unset all the session
+    // Unset all the session
     session_unset();
 
-    //destroying the session
+    // Destroying the session
     session_destroy();
 
-    //redirecting the user to the login page
-    header("Location:index.php");
+    // Redirecting the user to the login page
+    header("Location: index.php");
+    exit();
 }
 
-//adding new admin to the system
-//adding new admin to the system
-if (isset($_POST["register"])) {
-    // Retrieving data from the form and sanitizing input
-    // Retrieving data from the form and sanitizing input
-    $id =  $_POST["id"];
-    $year = mysqli_real_escape_string($connection, $_POST["year"]);
-    $semester = mysqli_real_escape_string($connection, $_POST["semester"]);
-    $class = mysqli_real_escape_string($connection, $_POST["class"]);
-    $subclass = $_POST["subclass"];
-    $subject = mysqli_real_escape_string($connection, $_POST["subject"]);
-    $marks = mysqli_real_escape_string($connection, $_POST["marks"]);
-    $result_type = mysqli_real_escape_string($connection, $_POST["result_type"]);
-    $date = date("Y-m-d");
+// Checking if a student ID is provided via GET request
+// Checking if a student ID is provided via GET request
+if (isset($_GET["id"])) {
+    // Sanitize the input to ensure it's an integer
+    // Sanitize the input to ensure it's an integer
+    $student_id = $_GET["id"]; 
 
-    // Now let's move the uploaded image into the folder: image
-        // Inserting data into the database
-        $insert_query = mysqli_query($connection, "INSERT INTO `results` ( `student_id`, `year`, `semester`, `class`, `sub_class`, `subject`, `marks`,`result_type`,`date`) VALUES ( '$id', '$year', '$semester', '$class', '$subclass', '$subject', '$marks','$result_type','$date')");
+    // Query to retrieve the class name for the given student ID
+    // Query to retrieve the class name for the given student ID
+    $select_query = "
+        SELECT c.class_name
+        FROM classese c
+        JOIN studentclass sc ON c.id = sc.class_id
+        WHERE sc.student_id = $student_id;
+    ";
 
+    // Execute the query
+    // Execute the query
+    $class_result = mysqli_query($connection, $select_query);
+    $class_row = mysqli_fetch_array($class_result);
+    $class = $class_row["class_name"];
 
-        if ($insert_query) {
+    // Select the active semester
+    // Select the active semester
+    $active_semester = mysqli_query($connection, "SELECT name FROM semester WHERE status='Active'");
+    $active_row = mysqli_fetch_array($active_semester);
+    if ($active_row) {
+        $semester_name = $active_row["name"];
+    } else {
+        echo "No semester is active";
+        exit(); // Exit the script since there is no active semester
+    }
+
+    // Select the active year
+    $active_year = mysqli_query($connection, "SELECT year FROM accademicyear WHERE status='Active'");
+    $active_year_row = mysqli_fetch_array($active_year);
+    if ($active_year_row) {
+        $year_name = $active_year_row["year"];
+    } else {
+        echo "No year is active";
+        exit(); // Exit the script since there is no active year
+    }
+
+    // Retrieve teacher ID based on email session
+    // Retrieve teacher ID based on email session
+    $email = $_SESSION['email'];
+    $query = "SELECT id FROM teachers WHERE email = '$email'";
+    $result = mysqli_query($connection, $query);
+    $row = mysqli_fetch_assoc($result);
+    $teacherId = $row['id'];
+
+    // Query to retrieve courses for the teacher
+    // Query to retrieve courses for the teacher
+    $query = "SELECT * FROM teacherclass WHERE teacher_id = '$teacherId'";
+    $courseDetails = mysqli_query($connection, $query);
+    $row = mysqli_fetch_array($courseDetails);
+    $subject = $row["subject"];
+
+    // Fetch course name based on subject_id
+    // Fetch course name based on subject_id
+    $subjectId = $row["subject"];
+    $query = "SELECT course FROM courses WHERE id = '$subjectId'";
+    $result = mysqli_query($connection, $query);
+    $courseName = mysqli_fetch_array($result)['course'];
+
+    // Check if the form has been submitted for registration
+    // Check if the form has been submitted for registration
+    if (isset($_POST["register"])) {
+        $marks = $_POST["marks"]; // Sanitize the input to ensure it's an integer
+        $date = date("Y-m-d");
+
+        // Check if results have been uploaded already
+        // Check if results have been uploaded already
+        $result_select = mysqli_query($connection, "SELECT * FROM results WHERE student_id = '$student_id' AND year = '$year_name' AND semester = '$semester_name' AND subject = '$courseName' AND class = '$class'");
+        $array = mysqli_fetch_array($result_select);
+        
+        if ($array) {
             echo "<script>
-                alert('Registration Successful');
-                window.location.href = './results.php';
+                alert('Results for this subject has already been uploaded for this semester');
             </script>";
         } else {
-            echo "<script>
-                alert('Registration Failed');
-            </script>";
+            // Inserting data into the database
+            // Inserting data into the database
+            $insert_query = mysqli_query($connection, "INSERT INTO `results` (`year`, `semester`, `student_id`, `subject`, class, `marks`, `date`) VALUES ('$year_name', '$semester_name', '$student_id', '$courseName', '$class', '$marks', '$date')");
+
+            if ($insert_query) {
+                echo "<script>
+                    alert('Result has been uploaded successfully');
+                    window.location.href = 'result.php';
+                </script>";
+            } else {
+                echo "<script>
+                    alert('Registration Failed');
+                </script>";
+            }
         }
+    }
 }
-
-
-
 ?>
+
+
+
+
+
+    
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -63,7 +139,7 @@ if (isset($_POST["register"])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD || DASHBOARD</title>
+    <title>Results</title>
     <!-- assets -->
     <!-- assets -->
     <script src="../Assets/chart.min.js"></script>
@@ -111,174 +187,36 @@ if (isset($_POST["register"])) {
 
             <div class="flex justify-center mt-14">
                 <div class="h-[100px] w-[600px] flex bg-white pl-20 pr-20 rounded-lg">
-                    <!-- Step 1 -->
-                    <div class="w-1/3 flex items-center">
-                        <div class="h-4 w-4 rounded-full bg-blue-500"></div>
-                        <div class="flex-1 h-0.5 bg-gray-300"></div>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="w-1/3 flex items-center">
-                        <div class="h-4 w-4 rounded-full bg-gray-300"></div>
-                        <div class="flex-1 h-0.5 bg-gray-300"></div>
-                    </div>
-
                     <!-- Step 3 -->
                     <div class="w-1/3 flex items-center">
-                        <div class="h-4 w-4 rounded-full bg-gray-300"></div>
+                        <div class="h-4 w-4 rounded-full bg-blue-600"></div>
                         <div class="flex-1 h-0.5 bg-gray-300"></div>
+                        <div class="h-4 w-4 rounded-full bg-blue-600"></div>
+
                     </div>
                 </div>
             </div>
 
             <div class="flex items-center mb-8 flex justify-center mt-10">
-                <div class="h-[360px] w-[600px] bg-white rounded-lg p-6">
+                <div class="h-[200px] w-[600px] bg-white rounded-lg p-6">
                     <form id="multiStepForm" method="post" action="" enctype="multipart/form-data">
                         <!-- first form -->
                         <!-- first form -->
                         <div class="mb-6 step" id="step1">
                             <div>
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Student id</label>
-                                <input type="text" id="firstName" name="id"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter student id..."><br><br>
-
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Year</label>
-                                <select type="text" id="firstName" name="year"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select year --</option>
-                                    <?php
-                                    $query = "SELECT * FROM `accademicyear`";
-                                    $result = mysqli_query($connection, $query);
-                                    while ($row = mysqli_fetch_array($result)) {
-                                    ?>
-                                    <option value="<?php echo $row['year'] ?>"><?php echo $row['year'] ?></option>
-                                    <?php
-                                    }
-                                    ?>
-                                </select><br><br>
-
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Semester</label>
-                                <select type="text" id="firstName" name="semester"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select semester --</option>
-                                    <?php
-                                    $query = "SELECT * FROM `semester`";
-                                    $result = mysqli_query($connection, $query);
-                                    while ($row = mysqli_fetch_array($result)) {
-                                    ?>
-                                    <option value="<?php echo $row['name'] ?>"><?php echo $row['name'] ?></option>
-                                    <?php
-                                    }
-                                    ?>
-                                </select><br><br>
-                            </div>
-
-                            <button type="button"
-                                class="mt-4 mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 nextButton"
-                                data-next-step="step2">
-                                Next
-                            </button>
-                        </div>
-
-                        <!-- second form -->
-                        <!-- second form -->
-                        <div class="mb-6 hidden step" id="step2">
-                            <div>
-                                <label class=" text-gray-700  mb-2 text-sm" for="phone">Class</label>
-                                <select type="text" id="firstName" name="class"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select class --</option>
-                                    <?php
-                                    $query = "SELECT * FROM `classese`";
-                                    $result = mysqli_query($connection, $query);
-                                    while ($row = mysqli_fetch_array($result)) {
-                                    ?>
-                                    <option value="<?php echo $row['class_name'] ?>"><?php echo $row['class_name'] ?></option>
-                                    <?php
-                                    }
-
-                                    ?>
-                                </select><br><br>
-
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">sub class</label>
-                                <select type="text" id="firstName" name="subclass"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select sub class --</option>
-                                    <?php
-                                    $query = "SELECT * FROM `classese`";
-                                    $result = mysqli_query($connection, $query);
-                                    while ($row = mysqli_fetch_array($result)) {
-                                    ?>
-                                    <option value="<?php echo $row['sub_class'] ?>"><?php echo $row['sub_class'] ?></option>
-                                    <?php
-                                    }
-
-                                    ?>
-                                </select><br><br>
-
-                                    <label class=" text-gray-700  mb-2 text-sm" for="firstName">Subject</label>
-                                    <select type="text" id="firstName" name="subject"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select subjects--</option>
-                                    <?php
-                                    $query = "SELECT * FROM `courses`";
-                                    $result = mysqli_query($connection, $query);
-                                    while ($row = mysqli_fetch_array($result)) {
-                                    ?>
-                                    <option value="<?php echo $row['course'] ?>"><?php echo $row['course'] ?></option>
-                                    <?php
-                                    }
-
-                                    ?>
-                                </select><br><br>
-
-
-                            </div>
-                            <div>
-                                <button type="button"
-                                    class="mt-4 mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 previousButton"
-                                    data-previous-step="step1">Previous</button>
-                                <button type="button"
-                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 nextButton"
-                                    data-next-step="step3">Next</button>
-                            </div>
-                        </div>
-
-                        <!-- third form -->
-                        <!-- third form -->
-                        <div class="mb-6 hidden step" id="step3">
-                            <div>
-
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Marks</label>
                                 <input type="text" id="firstName" name="marks"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter marks.."><br><br>
-
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Result Type</label>
-                                <select type="text" id="firstName" name="result_type"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select result type --</option>
-                                    <option value="Examinatoin">Examination</option>
-                                    <option value="Mid Term">Mid Term</option>
-                                    <option value="Exercise">Exercise</option>
-                                    <option value="Assignment">Assignment</option> 
-                                </select><br><br>
                             </div>
                             <div>
-                                <button type="button"
-                                    class="mt-4 mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 previousButton"
-                                    data-previous-step="step2">Previous</button>
                                 <button type="submit"
-                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600" name="register">Submit</button>
+                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                                    name="register">Submit</button>
                             </div>
                         </div>
+
+
                     </form>
                 </div>
             </div>
@@ -293,53 +231,6 @@ if (isset($_POST["register"])) {
         return confirm("Are you sure you want to logout?");
     }
     </script>
-    <script>
-    // Get all the form steps, next buttons, previous buttons, and progress indicators
-    const steps = document.querySelectorAll('.step');
-    const nextButtons = document.querySelectorAll('.nextButton');
-    const previousButtons = document.querySelectorAll('.previousButton');
-    const progressIndicators = document.querySelectorAll('.h-4');
-
-    // Add click event listeners to each next button
-    nextButtons.forEach((button, index) => {
-        button.addEventListener('click', () => {
-            // Get the next step ID from the data attribute
-            const nextStepId = button.getAttribute('data-next-step');
-
-            // Hide the current step
-            const currentStep = button.closest('.step');
-            currentStep.classList.add('hidden');
-
-            // Show the next step
-            const nextStep = document.getElementById(nextStepId);
-            nextStep.classList.remove('hidden');
-
-            // Update the progress indicators
-            progressIndicators[index + 1].classList.add('bg-blue-500');
-        });
-    });
-
-    // Add click event listeners to each previous button
-    previousButtons.forEach((button, index) => {
-        button.addEventListener('click', () => {
-            // Get the previous step ID from the data attribute
-            const previousStepId = button.getAttribute('data-previous-step');
-
-            // Hide the current step
-            const currentStep = button.closest('.step');
-            currentStep.classList.add('hidden');
-
-            // Show the previous step
-            const previousStep = document.getElementById(previousStepId);
-            previousStep.classList.remove('hidden');
-
-            // Update the progress indicators
-            progressIndicators[index + 1].classList.remove('bg-blue-500');
-        });
-    });
-    </script>
-
-
 </body>
 
 </html>

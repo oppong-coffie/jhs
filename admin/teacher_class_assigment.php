@@ -40,76 +40,77 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD || DASHBOARD</title>
+    <title>My Website</title>
     <!-- assets -->
+    <!-- scripts -->
+    <script src="../Assets/tailwind.js"></script>
     <script src="../Assets/chart.min.js"></script>
     <link rel="stylesheet" href="../Assets/fonts/fonts.css">
     <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
-
-    <!-- scripts -->
-    <script src="../Assets/tailwind.js"></script>
     <script src="../Assets/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="../css/admin.css">
+
+
 </head>
 
-<body class="h-[100vh] bg-gray-300" style="font-family: poppins;">
-    <!-- blue background -->
-    <div class="h-[300px] bg-[#736FF8]"></div>
+<body style="font-family: poppins;" class="bg-gray-300">
 
-    <div class="-mt-[300px]">
-        <!-- side nav -->
-        <div class="w-60 h-[100vh] absolute p-6">
-            <?php include('../nav/nav.php') ?>
-        </div>
-        <!-- page content -->
-        <div class="ml-[280px]  pt-6 pr-6">
-            <!-- page title1 -->
-            <div class="grid grid-cols-2">
-                <div>
-                    <div class="flex">
-                        <p class="text-gray-300 text-sm">Pages</p>
-                        <p class="text-white text-sm">/Assign Class</p>
-                    </div>
-                    <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
+
+<!-- blue background -->
+<div class="h-[300px] bg-[#736FF8]"></div>
+
+<div class="-mt-[300px]">
+
+    <!-- side nav -->
+    <!-- side nav -->
+    <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
+        <?php include('../nav/nav.php') ?>
+    </div>
+
+    <!-- page content -->
+    <div class="ml-[280px]  pt-6 pr-6">
+        <!-- page title1 -->
+        <div class="grid grid-cols-2">
+            <div>
+                <div class="flex">
+                    <p class="text-gray-300 text-sm">Pages</p>
+                    <p class="text-white text-sm">/Assign Class</p>
                 </div>
-                <div class="flex pr-10 gap-6">
-                    <i class="fa-light fa-bell ml-auto text-white"></i>
-                    <i class="fa-sharp fa-solid fa-sun "></i>
-                    <a href="teacher_class_add.php">
-                        <button class="bg-white h-6  w-10 rounded-sm shadow-sm text-center" name="submit">
-                            Add
-                        </button>
-                    </a>
-                </div>
+                <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
             </div>
+            <div class="flex pr-10 gap-6">
+                <i class="fa-light fa-bell ml-auto text-white"></i>
+                <i class="fa-sharp fa-solid fa-sun "></i>
+                <a href="teacher_class_add.php">
+                    <button class="bg-white h-6  w-10 rounded-sm shadow-sm text-center" name="submit">
+                        Add
+                    </button>
+                </a>
+            </div>
+        </div>
 
-            <div class="bg-white  w-[1050px] rounded-lg shadow-sm mt-10 p-6">
-                <table id="myTable" class="w-[990px] ml-2" id="container">
-                    <thead class="p-2">
-                        <tr class="text-left text-[12px] h-10 text-gray-400">
-                            <th>ID</th>
-                            <th>TEACHER</th>
-                            <th>CLASS</th>
-                            <th>SUB CLASS</th>
-                            <th>SUBJECT</th>
-                            <th>DATE</th>
-                            <th>ACTION</th>
-                        </tr>
-                    </thead>
-                    <?php
+        <div class="bg-white  w-[1050px] rounded-lg shadow-sm mt-10 p-6">
+            <table id="myTable" class="w-[990px] ml-2" id="container">
+                <thead class="p-2">
+                    <tr class="text-left text-[12px] h-10 text-gray-400">
+                        <th>ID</th>
+                        <th>TEACHER</th>
+                        <th>CLASS</th>
+                        <th>SUBJECT</th>
+                        <th>DATE</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <?php
                         while ($row = mysqli_fetch_array($teacher_details)) {
                     ?>
-                    <tbody class="text-[13px] text-gray-600">
-                        <tr class="even:bg-[#e9e3ff] h-10">
-                            <td><?php echo $row["id"] ?></td>
-                            <td>
-                                <?php
+                <tbody class="text-[13px] text-gray-600">
+                    <tr class="even:bg-[#e9e3ff] h-10">
+                        <td><?php echo $row["id"] ?></td>
+                        <td>
+                            <?php
                                     // Fetch course name based on subject_id
                                     $subjectId = $row["teacher_id"];
                                     $query = "SELECT name FROM teachers WHERE id = '$subjectId'";
@@ -117,9 +118,9 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                                     $courseName = mysqli_fetch_array($result)['name'];
                                     echo $courseName;
                                 ?>
-                            </td>
-                            <td>
-                                <?php
+                        </td>
+                        <td>
+                            <?php
                                     // Fetch course name based on subject_id
                                     $subjectId = $row["class_id"];
                                     $query = "SELECT class_name FROM classese WHERE id = $subjectId";
@@ -127,10 +128,9 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                                     $courseName = mysqli_fetch_array($result)['class_name'];
                                     echo $courseName;
                                 ?>
-                            </td>
-                            <td><?php echo $row["sub_class"] ?></td>
-                            <td>
-                                <?php
+                        </td>
+                        <td>
+                            <?php
                                     // Fetch course name based on subject_id
                                     $subjectId = $row["subject"];
                                     $query = "SELECT course FROM courses WHERE id = '$subjectId'";
@@ -138,58 +138,57 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                                     $courseName = mysqli_fetch_array($result)['course'];
                                     echo $courseName;
                                 ?>
-                            </td>
-                            <td><?php echo $row["date"] ?></td>
-                            <td>
-                                <div class="flex gap-[2px]">
-                                    <a href="teacher_reg.php?id=<?php echo $row['id'] ?>">
-                                        <div class="bg-green-500 text-white w-6 text-center rounded-sm">
-                                            <button><i class="fa fa-edit"></i></button>
-                                        </div>
-                                    </a>
-                                    <a href="teachers_reg.php?delete=<?php echo $row['id'] ?>">
-                                        <div class="bg-red-600 text-white w-6 text-center rounded-sm">
-                                            <button onclick="return confirmDelete()"><i
-                                                    class="fa fa-trash"></i></button>
-                                        </div>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <?php
+                        </td>
+                        <td><?php echo $row["date"] ?></td>
+                        <td>
+                            <div class="flex gap-[2px]">
+                                <a href="teacher_reg.php?id=<?php echo $row['id'] ?>">
+                                    <div class="bg-green-500 text-white w-6 text-center rounded-sm">
+                                        <button><i class="fa fa-edit"></i></button>
+                                    </div>
+                                </a>
+                                <a href="teachers_reg.php?delete=<?php echo $row['id'] ?>">
+                                    <div class="bg-red-600 text-white w-6 text-center rounded-sm">
+                                        <button onclick="return confirmDelete()"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <?php
     }
     ?>
-                </table>
+            </table>
 
-                <!-- pagination -->
-                <!-- pagination -->
-                <div class="pagination mt-10 gap-10">
-                    <?php if ($totalPages > 1) { ?>
-                    <?php if ($currentpage > 1) { ?>
-                    <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button
-                            class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
-                    <?php } ?>
-                    <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
-                    <a href="?page=<?php echo $i; ?>"
-                        class="pagination-link <?php echo ($i == $currentpage) ? 'active' : ''; ?>"><?php echo $i; ?></a>
-                    <?php } ?>
-                    <?php if ($currentpage < $totalPages) { ?>
-                    <a href="?page=<?php echo ($currentpage + 1); ?>" class="pagination-link"><button
-                            class="bg-blue-400 text-white w-20 rounded-sm">Next</button></a>
-                    <?php } ?>
-                    <?php } ?>
-                </div>
+            <!-- pagination -->
+            <!-- pagination -->
+            <div class="pagination mt-10 gap-10">
+                <?php if ($totalPages > 1) { ?>
+                <?php if ($currentpage > 1) { ?>
+                <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button
+                        class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
+                <?php } ?>
+                <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
+                <a href="?page=<?php echo $i; ?>"
+                    class="pagination-link <?php echo ($i == $currentpage) ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                <?php } ?>
+                <?php if ($currentpage < $totalPages) { ?>
+                <a href="?page=<?php echo ($currentpage + 1); ?>" class="pagination-link"><button
+                        class="bg-blue-400 text-white w-20 rounded-sm">Next</button></a>
+                <?php } ?>
+                <?php } ?>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- confirm before delete -->
-    <script>
-    function confirmDelete() {
-        return confirm("Are you sure you want to delete this record?");
-    }
-    </script>
+<!-- confirm before delete -->
+<script>
+function confirmDelete() {
+    return confirm("Are you sure you want to delete this record?");
+}
+</script>
 </body>
 
 </html>

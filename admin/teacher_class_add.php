@@ -26,7 +26,6 @@ if (isset($_POST['logout'])) {
 if (isset($_POST['register'])) {
     $course = $_POST['subject'];
     $className = $_POST['name'];
-    $subClass = $_POST['subClass'];
     $teacherId = $_POST['teacherId'];
     $date = date("Y-m-d");
 
@@ -37,13 +36,13 @@ if (isset($_POST['register'])) {
 
     if ($teacherCount > 0) {
         // Check if the class, subclass, and subject combination is already assigned to any teacher
-        $checkAssignmentQuery = "SELECT COUNT(*) FROM teacherClass WHERE class_id = $className AND sub_class = '$subClass' AND `subject` = $course";
+        $checkAssignmentQuery = "SELECT COUNT(*) FROM teacherClass WHERE class_id = $className AND `subject` = $course";
         $checkAssignmentResult = mysqli_query($connection, $checkAssignmentQuery);
         $assignmentCount = mysqli_fetch_array($checkAssignmentResult)[0];
 
         if ($assignmentCount == 0) {
             // Insert query
-            $query = "INSERT INTO teacherClass (class_id, teacher_id, sub_class, `subject`, date) VALUES ($className, $teacherId, '$subClass', $course, '$date')";
+            $query = "INSERT INTO teacherClass (class_id, teacher_id,  `subject`, date) VALUES ($className, $teacherId,  $course, '$date')";
             $insert = mysqli_query($connection, $query);
 
             if ($insert) {
@@ -149,7 +148,7 @@ if (isset($_POST['register'])) {
             </div>
 
             <div class="flex items-center mb-8 flex justify-center mt-10">
-                <div class="h-[410px] w-[600px] bg-white rounded-lg p-6">
+                <div class="h-[330px] w-[600px] bg-white rounded-lg p-6">
                     <form id="multiStepForm" method="post" action="" enctype="multipart/form-data">
                         <!-- first form -->
                         <!-- first form -->
@@ -176,15 +175,6 @@ if (isset($_POST['register'])) {
                                 </select><br><br>
 
 
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Sub Class</label>
-                                <select type="text" id="firstName" name="subClass"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter email...">
-                                    <option value="">-- select sub class --</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                </select><br><br>
 
                                 <select
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"

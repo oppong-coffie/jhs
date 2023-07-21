@@ -1,7 +1,7 @@
 
 
 <!-- navigation bar -->
-<div class="nav" style="font-family: poppins;">
+<div class="nav " style="font-family: poppins;">
     <div id="nav" class="h-[665px] w-[230px]  lg:block fixed rounded-md bg-white shadow-md p-6 ">
         <!-- school name -->
         <div class="pb-2">

@@ -11,14 +11,10 @@ if (!isset($_SESSION['email'])) {
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
 // Retrieve teacher ID based on email session
-$email = $_SESSION['email'];
-$query = "SELECT id FROM teachers WHERE email = '$email'";
-$result = mysqli_query($connection, $query);
-$row = mysqli_fetch_assoc($result);
-$teacherId = $row['id'];
+$teacherId = $_SESSION['id'];
 
 // Query to retrieve courses for the teacher
-$query = "SELECT * FROM teacherclass WHERE id = 3";
+$query = "SELECT * FROM teacherclass WHERE teacher_id = '$teacherId'";
 $courseDetails = mysqli_query($connection, $query);
 ?>
 
@@ -26,20 +22,7 @@ $courseDetails = mysqli_query($connection, $query);
 <html lang="en">
 
 <head>
-    <style>
-    .active {
-        background-color: #e9e3ff;
-        height: 30px;
-        border-radius: 5px;
-        padding-left: 4px;
-        padding-top: 2px;
-    }
-
-    .current-day .day-wrapper {
-        background-color: #FF0000;
-        /* Replace with your desired background color */
-        /* Add any other desired styles */
-    }
+    
     </style>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -104,18 +87,18 @@ while ($course = mysqli_fetch_assoc($courseDetails)) {
     $classRow = mysqli_fetch_assoc($classResult);
     $className = $classRow['class_name'];
 ?>
-                <div class="grid grid-cols-2 h-150 w-60 bg-white rounded-lg shadow-sm p-4">
+                <div class="grid grid-cols-2 h-150 w-60 bg-white rounded-lg shadow-sm p-4 mt-4">
                     <div>
                         <p class="text-lg text-gray-600"><?php echo $subjectName; ?></p>
-                        <p class="text-sm mt-4"><?php echo $className . " " . $subclass; ?></p>
-                        <a href="#">
+                        <p class="text-sm mt-4"><?php echo $className ?></p>
+                        <a href="class_details.php?class_name=<?php echo $className ?>">
                             <button
-                                class="mt-9 h-6 w-20 rounded-sm text-gray-100 bg-orange-600 text-sm">Detailed</button>
+                                class="mt-9 h-6 w-20 rounded-sm text-gray-100 bg-blue-500 text-sm">View Class</button>
                         </a>
                     </div>
                     <div>
-                        <div class="h-40 w-40 bg-orange-600 rounded-full ml-auto flex justify-center items-center">
-                            <i class="fa fa-book text-gray-100"></i>
+                        <div class="h-10 w-10 bg-blue-500 rounded-full ml-auto flex justify-center items-center">
+                            <i class="fa fa-users text-gray-100"></i>
                         </div>
                     </div>
                 </div>
@@ -124,7 +107,7 @@ while ($course = mysqli_fetch_assoc($courseDetails)) {
             </div>
 
             <!-- page title4 -->
-            <div class="flex justify-center gap-40 mt-16">
+            <div class="flex justify-center gap-40 mt-[400px]">
                 <p class="">All right reserved 2023</p>
                 <p>Powered by: The Group</p>
                 <p>info@school.com</p>

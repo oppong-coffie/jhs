@@ -1,10 +1,27 @@
-<div id="content" class="bg-gray-100">
-<?php
-session_start();
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Website</title>
+    <!-- assets -->
+    <!-- scripts -->
+    <script src="../Assets/tailwind.js"></script>
+    <script src="../Assets/chart.min.js"></script>
+    <link rel="stylesheet" href="../Assets/fonts/fonts.css">
+    <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
+    <script src="../Assets/jquery-3.6.0.min.js"></script>
+
+
+</head>
+
+<body style="font-family: poppins;" class="bg-gray-300">
+
+    <?php
+    session_start();
 
 //including the database connection
 //including the database connection
-include("../db_connection/db_connection.php")
+include("../db_connection/db_connection.php");
 
 ?>
 
@@ -16,9 +33,14 @@ include("../db_connection/db_connection.php")
     </div>
 
     <div class="-mt-[300px]">
+        <!-- side nav -->
+        <!-- side nav -->
+        <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
+            <?php include('../nav/nav.php') ?>
+        </div>
         <!-- page content -->
         <!-- page content -->
-        <div  class="lg:ml-[280px] ml-4  pt-6 pr-6">
+        <div class="lg:ml-[280px] ml-4  pt-6 pr-6">
             <!-- page title1 -->
             <!-- page title1 -->
             <div class="grid grid-cols-2">
@@ -96,9 +118,10 @@ include("../db_connection/db_connection.php")
 
                                 ?>
                         </p>
-                        <a href="./students_reg.php">
-                            <button
-                                class="mt-4 h-6 w-20 rounded-sm text-gray-100 bg-[#736FE1] text-sm">detailed</button>
+                        <a href="students_reg.php">
+                            <button class="mt-4 h-6 w-20 rounded-sm text-gray-100 bg-[#736FE1] text-sm">
+                                detailed
+                            </button>
                         </a>
                     </div>
                     <div>
@@ -141,7 +164,7 @@ include("../db_connection/db_connection.php")
                          
                         ?>
                         </p>
-                        <a href="">
+                        <a href="subjects.php">
                             <button
                                 class="mt-4 h-6 w-20 rounded-sm text-gray-100 bg-orange-600 text-sm">detailed</button>
                         </a>
@@ -185,7 +208,7 @@ include("../db_connection/db_connection.php")
 
                         ?>
                         </p>
-                        <a href="./teachers_reg.php">
+                        <a href="teacher_reg.php">
                             <button
                                 class="mt-4 h-6 w-20 rounded-sm text-gray-100 bg-green-500 text-sm">detailed</button>
                         </a>
@@ -229,7 +252,7 @@ include("../db_connection/db_connection.php")
                         ?>
                         </p>
                         <!-- view more button -->
-                        <a href="./teachers_reg.php">
+                        <a href="parents_reg.php">
                             <button class="mt-4 h-6 w-20 text-sm rounded-sm text-gray-100 bg-blue-400">detailed</button>
                         </a>
                     </div>
@@ -308,7 +331,9 @@ include("../db_connection/db_connection.php")
     });
     </script>
 
+</body>
 
+</html>
 <?php
 //checking if user is logged in
 if (isset($_POST['logout'])) {
@@ -326,4 +351,3 @@ if (isset($_POST['logout'])) {
     ";
 }
 ?>
-</div>

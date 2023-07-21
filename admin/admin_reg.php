@@ -1,4 +1,22 @@
-<?php
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Website</title>
+    <!-- assets -->
+    <!-- scripts -->
+    <script src="../Assets/tailwind.js"></script>
+    <script src="../Assets/chart.min.js"></script>
+    <link rel="stylesheet" href="../Assets/fonts/fonts.css">
+    <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
+    <script src="../Assets/jquery-3.6.0.min.js"></script>
+
+
+</head>
+
+<body style="font-family: poppins;" class="bg-gray-300">
+
+    <?php
 session_start();
 
 // Database connection
@@ -40,30 +58,18 @@ $totalRecords = $totalRecordsRow['total'];
 $totalPages = ceil($totalRecords / $recordsPerPage);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN DASHBOARD || DASHBOARD</title>
-    <!-- assets -->
-    <script src="../Assets/tailwind.js"></script>
-    <script src="../Assets/chart.min.js"></script>
-    <link rel="stylesheet" href="../Assets/fonts/fonts.css">
-    <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
-
-</head>
-
-<body class="h-[100vh] bg-gray-300" style="font-family: poppins;">
     <!-- blue background -->
     <div class="h-[300px]  w-[1100px] lg:w-[1366px] bg-[#736FF8]"></div>
 
     <div class="-mt-[300px]">
-        
+        <!-- side nav -->
+        <!-- side nav -->
+        <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
+            <?php include('../nav/nav.php') ?>
+        </div>
+
         <!-- page content -->
-        <div id="content" class="lg:ml-[280px] ml-4  pt-6 pr-6">
+        <div id="" class="lg:ml-[280px] ml-4  pt-6 pr-6">
             <!-- page title1 -->
             <div class="grid grid-cols-2">
                 <div>
@@ -77,7 +83,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 <div class="flex ml-auto gap-4">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
                     <i class="fa-sharp fa-solid fa-sun "></i>
-            
+
 
                     <a href="admin_add.php">
                         <button class="bg-white h-6  w-12 rounded-sm text-gray-600">Add</button>
@@ -145,7 +151,8 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 <div class="pagination mt-4 gap-10">
                     <?php if ($totalPages > 1) { ?>
                     <?php if ($currentpage > 1) { ?>
-                    <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
+                    <a href="?page=<?php echo ($currentpage - 1); ?>" class="pagination-link"> <button
+                            class="text-white w-20 bg-blue-400 rounded-sm">Previous</button></a>
                     <?php } ?>
                     <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
                     <a href="?page=<?php echo $i; ?>"
@@ -162,8 +169,8 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
     </div>
 
     <!-- confirm before delete -->
-   <!-- confirm before delete -->
-   <script>
+    <!-- confirm before delete -->
+    <script>
     function confirmLogout() {
         return confirm("Are you sure you want to logout?");
     }
