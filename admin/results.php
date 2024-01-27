@@ -92,6 +92,9 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                 </div>
 
                 <div class="bg-white  w-[1050px] rounded-lg shadow-sm mt-10 p-6">
+                    <!-- search -->
+                <input id="search" type="text" class="bg-blue-100 h-9 w-80 rounded-lg outline-none p-2" placeholder="search by id..">
+
                     <table id="myTable" class="table w-[990px] ml-2" id="container">
                         <thead class="p-2  p w-[100px]">
                             <tr class="text-left text-[12px] h-10 text-gray-400">
@@ -208,6 +211,31 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
             return confirm("Are you sure you want to delete this record?");
         }
         </script>
+        <script>
+    function mySearch() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, starting from index 1 to skip the header row (index 0)
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1]; // Use [0] to get the first column (student ID)
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = ""; // Show the row if it matches the search query
+                } else {
+                    tr[i].style.display = "none"; // Hide the row if it doesn't match the search query
+                }
+            }
+        }
+    }
+
+    // Attach an event listener to the search input
+    document.getElementById("search").addEventListener("input", mySearch);
+</script>
     </body>
 
     </html>

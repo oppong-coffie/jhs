@@ -85,7 +85,7 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
     <div class="-mt-[300px]">
         <!-- side nav -->
         <div class="w-60 h-[100vh] absolute p-6">
-            <?php include('../nav/teacher_nav.php') ?>
+            <?php include('../nav/parent_nav.php') ?>
         </div>
         <!-- page content -->
         <div class="ml-[280px] pt-6 pr-6">
@@ -94,16 +94,14 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                 <div>
                     <div class="flex">
                         <p class="text-gray-300 text-sm">Pages</p>
-                        <p class="text-white text-sm">/Manage Teachers</p>
+                        <p class="text-white text-sm">/Student Result</p>
                     </div>
                     <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
                 </div>
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
                     <i class="fa-sharp fa-solid fa-sun "></i>
-                    <a href="results_add.php">
-                        <button class="bg-white h-6  w-12 rounded-sm text-gray-600">Add</button>
-                    </a>
+                    
                 </div>
             </div>
 
@@ -127,7 +125,6 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                             <th>ID</th>
                             <th>STUDENT ID</th>
                             <th>YEAR</th>
-                            <th>SUB CLASS</th>
                             <th>SUBJECT</th>
                             <th>MARKS</th>
                             <th>GRADE</th>
@@ -186,7 +183,6 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                             <th>ID</th>
                             <th>STUDENT ID</th>
                             <th>YEAR</th>
-                            <th>SUB CLASS</th>
                             <th>SUBJECT</th>
                             <th>MARKS</th>
                             <th>GRADE</th>
@@ -303,7 +299,6 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                             <th>ID</th>
                             <th>STUDENT ID</th>
                             <th>YEAR</th>
-                            <th>SUB CLASS</th>
                             <th>SUBJECT</th>
                             <th>MARKS</th>
                             <th>GRADE</th>
@@ -420,7 +415,6 @@ $studentDetailsRow = mysqli_fetch_assoc($studentDetailsResult);
                             <th>ID</th>
                             <th>STUDENT ID</th>
                             <th>YEAR</th>
-                            <th>SUB CLASS</th>
                             <th>SUBJECT</th>
                             <th>MARKS</th>
                             <th>GRADE</th>

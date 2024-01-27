@@ -25,7 +25,6 @@ if (isset($_POST['logout'])) {
 //adding new admin to the system
 if (isset($_POST['register'])) {
     $className = $_POST['name'];
-    $subClass = $_POST['subClass'];
     $teacherId = $_POST['teacherId'];
     $date = date("Y-m-d");
 
@@ -35,7 +34,7 @@ if (isset($_POST['register'])) {
 
   
             // Insert query
-            $query = "INSERT INTO studentClass (class_id, student_id, sub_class, date) VALUES ($className, $teacherId, '$subClass',  '$date')";
+            $query = "INSERT INTO studentClass (class_id, student_id, date) VALUES ($className, $teacherId, '$date')";
             $insert = mysqli_query($connection, $query);
 
             if ($insert) {
@@ -130,7 +129,7 @@ if (isset($_POST['register'])) {
             </div>
 
             <div class="flex items-center mb-8 flex justify-center mt-10">
-                <div class="h-[410px] w-[600px] bg-white rounded-lg p-6">
+                <div class="h-[330px] w-[600px] bg-white rounded-lg p-6">
                     <form id="multiStepForm" method="post" action="" enctype="multipart/form-data">
                         <!-- first form -->
                         <!-- first form -->
@@ -157,16 +156,7 @@ if (isset($_POST['register'])) {
                                 </select><br><br>
 
 
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Sub Class</label>
-                                <select type="text" id="firstName" name="subClass"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter email...">
-                                    <option value="">-- select sub class --</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                </select><br><br>
-
+                               
 
                             </div>
 

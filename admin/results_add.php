@@ -30,15 +30,13 @@ if (isset($_POST["register"])) {
     $year = mysqli_real_escape_string($connection, $_POST["year"]);
     $semester = mysqli_real_escape_string($connection, $_POST["semester"]);
     $class = mysqli_real_escape_string($connection, $_POST["class"]);
-    $subclass = $_POST["subclass"];
     $subject = mysqli_real_escape_string($connection, $_POST["subject"]);
     $marks = mysqli_real_escape_string($connection, $_POST["marks"]);
-    $result_type = mysqli_real_escape_string($connection, $_POST["result_type"]);
     $date = date("Y-m-d");
 
     // Now let's move the uploaded image into the folder: image
         // Inserting data into the database
-        $insert_query = mysqli_query($connection, "INSERT INTO `results` ( `student_id`, `year`, `semester`, `class`, `sub_class`, `subject`, `marks`,`result_type`,`date`) VALUES ( '$id', '$year', '$semester', '$class', '$subclass', '$subject', '$marks','$result_type','$date')");
+        $insert_query = mysqli_query($connection, "INSERT INTO `results` ( `student_id`, `year`, `semester`, `class`,  `subject`, `marks`,`date`) VALUES ( '$id', '$year', '$semester', '$class',  '$subject', '$marks','$date')");
 
 
         if ($insert_query) {
@@ -197,32 +195,18 @@ if (isset($_POST["register"])) {
                                     $result = mysqli_query($connection, $query);
                                     while ($row = mysqli_fetch_array($result)) {
                                     ?>
-                                    <option value="<?php echo $row['class_name'] ?>"><?php echo $row['class_name'] ?></option>
+                                    <option value="<?php echo $row['class_name'] ?>"><?php echo $row['class_name'] ?>
+                                    </option>
                                     <?php
                                     }
 
                                     ?>
                                 </select><br><br>
 
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">sub class</label>
-                                <select type="text" id="firstName" name="subclass"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select sub class --</option>
-                                    <?php
-                                    $query = "SELECT * FROM `classese`";
-                                    $result = mysqli_query($connection, $query);
-                                    while ($row = mysqli_fetch_array($result)) {
-                                    ?>
-                                    <option value="<?php echo $row['sub_class'] ?>"><?php echo $row['sub_class'] ?></option>
-                                    <?php
-                                    }
 
-                                    ?>
-                                </select><br><br>
 
-                                    <label class=" text-gray-700  mb-2 text-sm" for="firstName">Subject</label>
-                                    <select type="text" id="firstName" name="subject"
+                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Subject</label>
+                                <select type="text" id="firstName" name="subject"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter your first name">
                                     <option value="">-- select subjects--</option>
@@ -239,46 +223,28 @@ if (isset($_POST["register"])) {
                                 </select><br><br>
 
 
-                            </div>
-                            <div>
-                                <button type="button"
-                                    class="mt-4 mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 previousButton"
-                                    data-previous-step="step1">Previous</button>
-                                <button type="button"
-                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 nextButton"
-                                    data-next-step="step3">Next</button>
-                            </div>
-                        </div>
-
-                        <!-- third form -->
-                        <!-- third form -->
-                        <div class="mb-6 hidden step" id="step3">
-                            <div>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Marks</label>
                                 <input type="text" id="firstName" name="marks"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
                                     placeholder="Enter marks.."><br><br>
 
-                                <label class=" text-gray-700  mb-2 text-sm" for="firstName">Result Type</label>
-                                <select type="text" id="firstName" name="result_type"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name">
-                                    <option value="">-- select result type --</option>
-                                    <option value="Examinatoin">Examination</option>
-                                    <option value="Mid Term">Mid Term</option>
-                                    <option value="Exercise">Exercise</option>
-                                    <option value="Assignment">Assignment</option> 
-                                </select><br><br>
+
+
+
+
                             </div>
                             <div>
                                 <button type="button"
                                     class="mt-4 mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 previousButton"
-                                    data-previous-step="step2">Previous</button>
-                                <button type="submit"
-                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600" name="register">Submit</button>
+                                    data-previous-step="step1">Previous</button>
+                                    <button type="submit"
+                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                                    name="register">Submit</button>
                             </div>
                         </div>
+
+                        
                     </form>
                 </div>
             </div>

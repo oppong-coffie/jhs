@@ -3,9 +3,7 @@
     //calclating student result
     //checking if three exercises ar uploaded
    // Step 1: Count the number of exercise results for the student
-   $exercise_select = mysqli_query($connection, "SELECT COUNT(*) AS exercise_count FROM results WHERE student_id = $student_id AND result_type = 'Exercise'");
-   $exercise_row = mysqli_fetch_assoc($exercise_select);
-   $exercise_count = $exercise_row["exercise_count"];
+    
 
    if($exercise_count == 3){
        $midsem_select = mysqli_query($connection, "SELECT COUNT(*) AS midterm_count FROM results WHERE student_id = $student_id AND result_type = 'Mid Term'");

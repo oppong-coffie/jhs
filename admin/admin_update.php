@@ -1,22 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADD ADMIN</title>
-    <!-- assets -->
-    <!-- assets --> 
-    <script src="../Assets/sweetalert.min.js"></script>   
-    <script src="../Assets/tailwind.js"></script>
-    <script src="../Assets/chart.min.js"></script>
-    <link rel="stylesheet" href="../Assets/fonts/fonts.css">
-    <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
-
-  
-</head>
-
 <?php
 session_start();
 
@@ -25,11 +6,9 @@ if(!isset($_SESSION['email'])){
 }
 
 //database connection
-//database connection
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
 
-//checking if user is logged in
 //checking if user is logged in
 if (isset($_POST['logout'])) {
     //unset all the session
@@ -42,62 +21,83 @@ if (isset($_POST['logout'])) {
     header("Location:index.php");
 }
 
-//adding new admin to the system
-//adding new admin to the system
 if (isset($_POST["register"])) {
     // Retrieving data from the form and sanitizing input
-    // Retrieving data from the form and sanitizing input
-    $id = mysqli_real_escape_string($connection, $_POST["id"]);
-    $password = mysqli_real_escape_string($connection, $_POST["password"]);
-    $role = mysqli_real_escape_string($connection, $_POST["role"]);
     $name = mysqli_real_escape_string($connection, $_POST["name"]);
     $email = mysqli_real_escape_string($connection, $_POST["email"]);
+    $id = $_POST["id"];
     $phone = $_POST["phone"];
+    $password = $_POST["password"];
     $dob = mysqli_real_escape_string($connection, $_POST["dob"]);
     $gender = mysqli_real_escape_string($connection, $_POST["gender"]);
-    $image = $_FILES["image"]["name"];
-    $img_temp_name = $_FILES['image']['tmp_name'];
-    $img_path = "../images/" . $image;
-    $date = date("Y-m-d");
 
-    //checking the password by the new admin has been choosing alresdy
-    $password_check = mysqli_query($connection, "SELECT * FROM `admin` WHERE `password` = '$password'");
-    if (mysqli_num_rows($password_check) > 0) {
-        echo "<script>
-            alert('Password has been taken');
-            window.location.href = 'admin_add.php';
-        </script>";
-        exit();
-    }else{
-    // move the uploaded image into the folder: image
-    //  move the uploaded image into the folder: image
-    if (move_uploaded_file($img_temp_name, $img_path)) {
-        // Inserting data into the database
-        $insert_query = mysqli_query($connection, "INSERT INTO `admin` (`adminId`, `name`, `images`, `email`, `birthDate`, `phoneNo`, `gender`, `role`,`password`,`date`) VALUES ('$id', '$name', '$image', '$email', '$dob', '$phone', '$gender', '$role','$password','$date')");
+    // Check if an image file was uploaded
+    if ($_FILES["image"]["name"]) {
+        $image = $_FILES["image"]["name"];
+        $img_temp_name = $_FILES['image']['tmp_name'];
+        $img_path = "../images/" . $image;
 
+        // Move the uploaded image to the folder: images
+        if (move_uploaded_file($img_temp_name, $img_path)) {
+            // Update data in the database, including the image field
+            $update_query = mysqli_query($connection, "UPDATE `admin` SET `name` = '$name', `images` = '$image', `email` = '$email', `birthDate` = '$dob', `phoneNo` = '$phone', `gender` = '$gender' WHERE `email` = '{$_SESSION['email']}'");
 
-        if ($insert_query) {
-            echo "<script>
-                alert('Registration Successful');
-                window.location.href = './admin_reg.php';
-            </script>";
+            if ($update_query) {
+                echo "<script>
+                    alert('Admin record updated successfully');
+                    window.location.href = './dashboard.php';
+                </script>";
+            } else {
+                echo "<script>
+                    alert('Failed to update admin record');
+                </script>";
+            }
         } else {
             echo "<script>
-                alert('Registration Failed');
+                alert('Failed to upload image');
             </script>";
         }
     } else {
-        echo "<script>
-            alert('Failed to upload image');
-        </script>";
-    }
+        // Update data in the database, excluding the image field
+        $update_query = mysqli_query($connection, "UPDATE `admin` SET `name` = '$name', `email` = '$email', `birthDate` = '$dob', `phoneNo` = '$phone', `gender` = '$gender' WHERE  `email` = '{$_SESSION['email']}'");
+
+        if ($update_query) {
+            echo "<script>
+                alert('Admin record updated successfully');
+                window.location.href = './dashboard.php';
+            </script>";
+        } else {
+            echo "<script>
+                alert('Failed to update admin record');
+            </script>";
+        }
     }
 }
 
 
 
-?>
 
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN DASHBOARD || DASHBOARD</title>
+    <!-- assets -->
+    <!-- assets -->
+    <script src="../Assets/chart.min.js"></script>
+    <link rel="stylesheet" href="../Assets/fonts/fonts.css">
+    <link rel="stylesheet" href="../Assets/fontawesome/css/all.css">
+
+    <!-- scripts -->
+    <!-- scripts -->
+    <script src="../Assets/tailwind.js"></script>
+    <script src="../Assets/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../css//admin.css">
+</head>
 
 <body class=" h-[100vh] bg-gray-300 " style="font-family: poppins;">
     <!-- blue background -->
@@ -108,23 +108,23 @@ if (isset($_POST["register"])) {
 
     <div class="-mt-[300px]">
         <!-- side nav -->
-       <!-- side nav -->
-       <div class="w-60 h-[100vh] absolute p-6 lg:block hidden " id="nav">
+        <!-- side nav -->
+        <div class="w-60 h-[100vh] absolute p-6">
             <?php include('../nav/nav.php') ?>
         </div>
         <!-- page content -->
         <!-- page content -->
-        <div class="lg:ml-[280px] ml-4  pt-6 pr-6">
+        <div class="ml-[280px]  pt-6 pr-6">
             <!-- page title1 -->
             <!-- page title1 -->
             <div class="grid grid-cols-2">
                 <div>
                     <div class="flex">
                         <p class="text-gray-300 text-sm">Pages</p>
-                        <p class="text-white text-sm">/Add Admin</p>
+                        <p class="text-white text-sm">/Edit admin details</p>
                     </div>
-                    <p class="text-white text-md mt-2"><i onclick="showMe()"
-                            class="fa fa-bars lg:hidden transform transition-transform rotate-90"></i></p>                </div>
+                    <p class="text-white text-md mt-2"><i class="fa fa-bars "></i></p>
+                </div>
                 <div class="flex pr-10 gap-6">
                     <i class="fa-light fa-bell ml-auto text-white"></i>
                     <i class="fa-sharp fa-solid fa-sun "></i>
@@ -143,19 +143,24 @@ if (isset($_POST["register"])) {
                     <div class="w-1/3 flex items-center">
                         <div class="h-4 w-4 rounded-full bg-gray-300"></div>
                         <div class="flex-1 h-0.5 bg-gray-300"></div>
+                        <div class="h-4 w-4 rounded-full bg-gray-300"></div>
                     </div>
 
-                    <!-- Step 3 -->
+                    <!-- Step 2 -->
                     <div class="w-1/3 flex items-center">
-                        <div class="h-4 w-4 rounded-full bg-gray-300"></div>
                         <div class="flex-1 h-0.5 bg-gray-300"></div>
-                        <div class="h-4 w-4 rounded-full bg-blue-500"></div>
+                        <div class="h-4 w-4 rounded-full bg-gray-300"></div>
                     </div>
                 </div>
             </div>
 
             <div class="flex items-center mb-8 flex justify-center mt-10">
                 <div class="h-[360px] w-[600px] bg-white rounded-lg p-6">
+                    <?php
+                    $id = $_SESSION['email'];
+                    $query = mysqli_query($connection, "SELECT * FROM `admin` WHERE `email` = '$id'");
+                    $row = mysqli_fetch_array($query);
+                    ?>
                     <form id="multiStepForm" method="post" action="" enctype="multipart/form-data">
                         <!-- first form -->
                         <!-- first form -->
@@ -165,21 +170,18 @@ if (isset($_POST["register"])) {
                                     Name</label>
                                 <input type="text" id="firstName" name="name"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your name..." required><br><br>
+                                    value="<?php echo $row["name"] ?>" required><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Email</label>
                                 <input type="text" id="firstName" name="email"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter email..." required><br><br>
+                                    value="<?php echo $row["email"] ?>" required><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Gender</label>
-                                <select type="text" id="firstName" name="gender"
+                                <input type="text" id="firstName" name="gender"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name" required>
-                                    <option value="">-- select gender --</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select><br><br>
+                                    value="<?php echo $row["gender"] ?>" required><br><br>
+
                             </div>
 
                             <button type="button"
@@ -196,17 +198,17 @@ if (isset($_POST["register"])) {
                                 <label class=" text-gray-700  mb-2 text-sm" for="phone">Phone</label>
                                 <input type="text" id="firstName" name="phone"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter phone..." required><br><br>
+                                    value="<?php echo $row["phoneNo"] ?>"> <br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Password</label>
                                 <input type="text" id="firstName" name="password"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter password..." required><br><br>
+                                    value="<?php echo $row["password"] ?>" required><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Admin Id</label>
                                 <input type="text" id="firstName" name="id"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter admin id..." required><br><br>
+                                    value="<?php echo $row["adminId"] ?>" required><br><br>
                             </div>
                             <div>
                                 <button type="button"
@@ -223,29 +225,28 @@ if (isset($_POST["register"])) {
                         <div class="mb-6 hidden step" id="step3">
                             <div>
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Role</label>
-                                <select type="text" id="firstName" name="role"
+                                <input type="text" id="firstName" name="role"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name" required>
-                                    <option value="">-- select role --</option>
-                                    <option value="Admin">Admin</option>
-                                </select><br><br>
+                                    value="<?php echo $row["role"] ?>" required><br><br>
+
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Image</label>
                                 <input type="file" id="firstName" name="image"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name" required><br><br>
+                                    value="<?php echo $row["images"] ?>" ><br><br>
 
                                 <label class=" text-gray-700  mb-2 text-sm" for="firstName">Date of Birth</label>
                                 <input type="date" id="firstName" name="dob"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                    placeholder="Enter your first name" required><br><br>
+                                    value="<?php echo $row["birthDate"] ?>" required><br><br>
                             </div>
                             <div>
                                 <button type="button"
                                     class="mt-4 mr-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 previousButton"
                                     data-previous-step="step2">Previous</button>
                                 <button type="submit"
-                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600" name="register">Submit</button>
+                                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                                    name="register">Submit</button>
                             </div>
                         </div>
                     </form>
@@ -257,16 +258,9 @@ if (isset($_POST["register"])) {
 
 
     <!-- confirm before delete -->
-    <!-- confirm before delete -->
-   <script>
+    <script>
     function confirmLogout() {
         return confirm("Are you sure you want to logout?");
-    }
-
-    function showMe() {
-        var nav = document.getElementById('nav');
-        nav.classList.toggle('hidden');
-        nav.classList.toggle('block ');
     }
     </script>
     <script>

@@ -23,18 +23,14 @@ session_start();
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
 
-//deleting records
+    //deleting admin records
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
-    $query = "DELETE FROM `admin` WHERE `id` = $id";
     $delete = mysqli_query($connection,"DELETE FROM `admin` WHERE `id` = $id" );
-
     if ($delete) {
-        header('location:admin_reg.php');
+        header('location:./admin_reg.php');
     }
 }
-
-
 
 
 // Number of records per page
@@ -92,6 +88,9 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
             </div>
 
             <div class="bg-white  w-[1050px] rounded-lg shadow-sm mt-10 p-6">
+                <!-- search -->
+                <input id="search" type="text" class="bg-blue-100 h-9 w-80 rounded-lg outline-none p-2" placeholder="search by id..">
+                
                 <table id="myTable" class="table w-[990px] ml-2" id="container">
                     <thead class="p-2  p w-[100px]">
                         <tr class="text-left text-[12px] h-10 text-gray-400">
@@ -127,15 +126,15 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                             <td><?php echo $row["date"] ?></td>
                             <td>
                                 <div class="flex gap-[2px]">
-                                    <a href="teacher_reg.php?id=<?php echo $row['Id'] ?>">
+                                    <a href="admin_update.php?id=<?php echo $row['Id'] ?>">
                                         <div class="bg-green-500 text-white w-6 text-center rounded-sm">
                                             <button><i class="fa fa-edit"></i></button>
                                         </div>
                                     </a>
-                                    <a href="teachers_reg.php?delete=<?php echo $row['Id'] ?>">
+                                    <a onclick="deleteAdmin(<?php echo $row['Id']; ?>)">
                                         <div class="bg-red-600 text-white w-6 text-center rounded-sm">
-                                            <button onclick="return confirmDelete()"><i
-                                                    class="fa fa-trash"></i></button>
+                                            <button ><i
+                                                class="fa fa-trash"></i></button>
                                         </div>
                                     </a>
                                 </div>
@@ -169,11 +168,57 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
     </div>
 
     <!-- confirm before delete -->
+    <script src="../Assets/jquery-3.6.0.min.js"></script>
+    <script src="../Assets/sweetalert.min.js"></script>
     <!-- confirm before delete -->
     <script>
-    function confirmLogout() {
-        return confirm("Are you sure you want to logout?");
-    }
+        // $("#delete-btn").on("click", function(e) {
+        //     e.preventDefault()
+
+        //     $.ajax({
+        //         url: 'admin_reg.php',
+        //         method: 'GET',
+        //         data: {
+        //             delete: 
+        //         }
+        //     })
+        // })
+        function deleteAdmin(id) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Are you sure to delete?',
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Sure, delete',
+                cancelButtonText: 'Nope, revert',
+            }).then(result => {
+                if(result.value) {
+                    $.ajax({
+                        url: 'admin_reg.php',
+                        method: 'GET',
+                        data: {
+                            delete: id
+                        },
+                        success: function(response) {
+                            console.log(response)
+                            Swal.fire({
+                                icon: 'success',
+                                text: 'Admin has been deleted successfully...',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                position: 'top-end'
+                            }).then(result => {
+                                window.location.reload()
+                            })
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+        
+                    })
+                }
+            })
+        }
 
     function showMe() {
         var nav = document.getElementById('nav');
@@ -181,6 +226,33 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
         nav.classList.toggle('block ');
     }
     </script>
+
+<script>
+    function mySearch() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, starting from index 1 to skip the header row (index 0)
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0]; // Use [0] to get the first column (student ID)
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = ""; // Show the row if it matches the search query
+                } else {
+                    tr[i].style.display = "none"; // Hide the row if it doesn't match the search query
+                }
+            }
+        }
+    }
+
+    // Attach an event listener to the search input
+    document.getElementById("search").addEventListener("input", mySearch);
+</script>
+
 </body>
 
 </html>

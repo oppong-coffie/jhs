@@ -1,8 +1,10 @@
 <?php
 session_start();
 
+// Check if the teacher is not logged in, redirect to the login page
 if (!isset($_SESSION['email'])) {
-    // Handle when the user is not logged in
+    header("Location: ../index.php");
+    exit;
 }
 
 // Database connection
@@ -66,11 +68,8 @@ if (isset($_GET["id"])) {
 
     // Retrieve teacher ID based on email session
     // Retrieve teacher ID based on email session
-    $email = $_SESSION['email'];
-    $query = "SELECT id FROM teachers WHERE email = '$email'";
-    $result = mysqli_query($connection, $query);
-    $row = mysqli_fetch_assoc($result);
-    $teacherId = $row['id'];
+    
+    $teacherId = $_SESSION['id'];
 
     // Query to retrieve courses for the teacher
     // Query to retrieve courses for the teacher

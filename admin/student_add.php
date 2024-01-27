@@ -48,7 +48,7 @@ if (isset($_POST["register"])) {
         if ($insert_query) {
             echo "<script>
                 alert('Registration Successful');
-                window.location.href = './teacher_reg.php';
+                window.location.href = './students_reg.php';
             </script>";
         } else {
             echo "<script>

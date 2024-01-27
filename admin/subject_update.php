@@ -1,50 +1,72 @@
-
 <?php
 session_start();
 
 // Database connection
-// Database connection
 $connection = mysqli_connect('localhost', 'root', '', 'management_class');
 
+// Function to sanitize user inputs (to prevent SQL injection)
+function sanitize($data)
+{
+    global $connection;
+    return mysqli_real_escape_string($connection, trim($data));
+}
+
+// Function to show a JavaScript alert and redirect to a URL
+function showAlertAndRedirect($message, $redirectUrl)
+{
+    echo "<script>alert('$message'); window.location.href = '$redirectUrl';</script>";
+    exit;
+}
+
+// Process form submission for adding/updating subjects
 if (isset($_POST['submit'])) {
-    //retrieving data from the form
-    //retrieving data from the form
-    $course = $_POST['course'];
+    // Retrieve data from the form
+    $course = sanitize($_POST['course']);
     $date = date('Y-m-d');
 
-    // Check if the course already exists in the database
     // Check if the course already exists in the database
     $checkQuery = "SELECT * FROM courses WHERE course = '$course'";
     $checkResult = mysqli_query($connection, $checkQuery);
 
     if (mysqli_num_rows($checkResult) > 0) {
-        // Course already exists
-        // Course already exists
-        echo "<script>
-                alert('Subject already exists');
-                window.location.href = 'subjects.php';
-            </script>";
+        // Course already exists, update the existing record
+        $updateQuery = "UPDATE courses SET date = '$date' WHERE course = '$course'";
+        $updateResult = mysqli_query($connection, $updateQuery);
+
+        if ($updateResult) {
+            // Update successful
+            showAlertAndRedirect('Subject updated successfully', 'subjects.php');
+        } else {
+            // Unable to update course
+            showAlertAndRedirect('Unable to update subject', 'subjects.php');
+        }
     } else {
         // Course does not exist, proceed with insertion
-        // Course does not exist, proceed with insertion
-        $query = "INSERT INTO `courses`(`course`, `date`) VALUES ('$course', '$date')";
-        $insert = mysqli_query($connection, $query);
-        
-        if ($insert) {
-            // Registration successful
-            // Registration successful
-            echo "<script>
-                    alert('Subject added Successful');
-                    window.location.href = 'subjects.php';
-                </script>";
+        $insertQuery = "INSERT INTO courses (course, date) VALUES ('$course', '$date')";
+        $insertResult = mysqli_query($connection, $insertQuery);
+
+        if ($insertResult) {
+            // Insertion successful
+            showAlertAndRedirect('Subject added successfully', 'subjects.php');
         } else {
-            // Unable to register course
-            // Unable to register course
-            echo "<script>
-                    alert('Unable to register subject');
-                    window.location.href = 'subjects.php';
-                </script>";
+            // Unable to add subject
+            showAlertAndRedirect('Unable to add subject', 'subjects.php');
         }
+    }
+}
+
+// Function to delete a subject by ID
+function deleteSubject($id)
+{
+    global $connection;
+    $deleteQuery = "DELETE FROM courses WHERE id = $id";
+    $deleteResult = mysqli_query($connection, $deleteQuery);
+
+    if ($deleteResult) {
+        header('Location: subjects.php');
+        exit;
+    } else {
+        showAlertAndRedirect('Unable to delete subject', 'subjects.php');
     }
 }
 
@@ -54,10 +76,11 @@ if (isset($_POST['submit'])) {
 //deleting records
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
-    $delete = mysqli_query($connection,"DELETE FROM `courses` WHERE `id` = $id" );
+    $query = "DELETE FROM `admin` WHERE `id` = $id";
+    $delete = mysqli_query($connection,"DELETE FROM `admin` WHERE `id` = $id" );
 
     if ($delete) {
-        header('location:subjects.php');
+        header('location:admin_reg.php');
     }
 }
 
@@ -174,12 +197,12 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                             <td><?php echo $row["date"] ?></td>
                             <td>
                                 <div class="flex gap-[2px]">
-                                    <a href="subjects.php?id=<?php echo $row['id'] ?>">
+                                    <a href="teacher_reg.php?id=<?php echo $row['id'] ?>">
                                         <div class="bg-green-500 text-white w-6 text-center rounded-sm">
                                             <button><i class="fa fa-edit"></i></button>
                                         </div>
                                     </a>
-                                    <a href="subjects.php?delete=<?php echo $row['id'] ?>">
+                                    <a href="teachers_reg.php?delete=<?php echo $row['id'] ?>">
                                         <div class="bg-red-600 text-white w-6 text-center rounded-sm">
                                             <button onclick="return confirmDelete()"><i
                                                     class="fa fa-trash"></i></button>

@@ -3,7 +3,7 @@ session_start();
 
 // Check if the teacher is not logged in, redirect to the login page
 if (!isset($_SESSION['email'])) {
-    header("Location: login.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -93,7 +93,7 @@ while ($course = mysqli_fetch_assoc($courseDetails)) {
                         <p class="text-sm mt-4"><?php echo $className ?></p>
                         <a href="class_details.php?class_name=<?php echo $className ?>">
                             <button
-                                class="mt-9 h-6 w-20 rounded-sm text-gray-100 bg-blue-500 text-sm">View Class</button>
+                                class="mt-9  p-2 rounded-sm text-gray-100 bg-blue-500 text-sm">View Class</button>
                         </a>
                     </div>
                     <div>
@@ -125,17 +125,3 @@ while ($course = mysqli_fetch_assoc($courseDetails)) {
 
 </html>
 
-<?php
-// Logout functionality
-if (isset($_POST['logout'])) {
-    // Unset all session variables
-    session_unset();
-
-    // Destroy the session
-    session_destroy();
-
-    // Redirect to the login page
-    header("Location: index.php");
-    exit;
-}
-?>

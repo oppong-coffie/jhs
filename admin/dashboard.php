@@ -19,6 +19,12 @@
     <?php
     session_start();
 
+    // Check if the teacher is not logged in, redirect to the login page
+if (!isset($_SESSION['email'])) {
+    header("Location: ../index.php");
+    exit;
+}
+
 //including the database connection
 //including the database connection
 include("../db_connection/db_connection.php");
@@ -94,7 +100,7 @@ include("../db_connection/db_connection.php");
                         <p class="text-[30px] mt-4">
                             <?php
                                 // Fetch the total number of students from the database
-                                $totalstudents_sql = "SELECT COUNT(*) AS total_students FROM students";
+                                $totalstudents_sql = "SELECT COUNT(*) AS total_students FROM student";
                                 $totalstudents_query = mysqli_query($connection, $totalstudents_sql);
 
                                 // Check if the query was successful
@@ -346,7 +352,7 @@ if (isset($_POST['logout'])) {
     //redirect
     echo "
         <script>
-            window.location.href='index.php';
+            window.location.href='../index.php';
         </script>
     ";
 }
